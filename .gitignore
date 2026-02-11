@@ -1,0 +1,52 @@
+# ===============================
+# Xcode
+# ===============================
+
+# User-specific files
+xcuserdata/
+*.xcuserstate
+*.xcworkspace/xcuserdata/
+
+# Build products
+build/
+DerivedData/
+
+# Swift Package Manager
+.swiftpm/
+.build/
+
+# CocoaPods (もし使うなら)
+Pods/
+
+# Carthage (もし使うなら)
+Carthage/Build/
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+
+# ===============================
+# macOS
+# ===============================
+
+.DS_Store
+
+# ===============================
+# Logs
+# ===============================
+
+*.log
+
+# ===============================
+# Environment files
+# ===============================
+
+.env
+.env.local
+
+# ===============================
+# Docker
+# ===============================
+
+docker-compose.override.yml

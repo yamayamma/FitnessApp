@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		28D4AF0E2F3BEB09004BFAFA /* FitnessAppWatch Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 28D4AEEE2F3BEB07004BFAFA /* FitnessAppWatch Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		28D4AECE2F3BE84D004BFAFA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -21,17 +25,68 @@
 			remoteGlobalIDString = 28D4AEBF2F3BE84A004BFAFA;
 			remoteInfo = FitnessApp;
 		};
+		28D4AEFB2F3BEB09004BFAFA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 28D4AEB82F3BE84A004BFAFA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 28D4AEED2F3BEB07004BFAFA;
+			remoteInfo = "FitnessAppWatch Watch App";
+		};
+		28D4AF052F3BEB09004BFAFA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 28D4AEB82F3BE84A004BFAFA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 28D4AEED2F3BEB07004BFAFA;
+			remoteInfo = "FitnessAppWatch Watch App";
+		};
+		28D4AF0C2F3BEB09004BFAFA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 28D4AEB82F3BE84A004BFAFA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 28D4AEED2F3BEB07004BFAFA;
+			remoteInfo = "FitnessAppWatch Watch App";
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		28D4AF122F3BEB09004BFAFA /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				28D4AF0E2F3BEB09004BFAFA /* FitnessAppWatch Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		28D4AEC02F3BE84A004BFAFA /* FitnessApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FitnessApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		28D4AECD2F3BE84D004BFAFA /* FitnessAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FitnessAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		28D4AED72F3BE84D004BFAFA /* FitnessAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FitnessAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		28D4AEEE2F3BEB07004BFAFA /* FitnessAppWatch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "FitnessAppWatch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		28D4AEFA2F3BEB09004BFAFA /* FitnessAppWatch Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "FitnessAppWatch Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		28D4AF042F3BEB09004BFAFA /* FitnessAppWatch Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "FitnessAppWatch Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		28D4AF1B2F3C0E3F004BFAFA /* Exceptions for "FitnessApp" folder in "FitnessApp" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 28D4AEBF2F3BE84A004BFAFA /* FitnessApp */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		28D4AEC22F3BE84A004BFAFA /* FitnessApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				28D4AF1B2F3C0E3F004BFAFA /* Exceptions for "FitnessApp" folder in "FitnessApp" target */,
+			);
 			path = FitnessApp;
 			sourceTree = "<group>";
 		};
@@ -43,6 +98,21 @@
 		28D4AEDA2F3BE84D004BFAFA /* FitnessAppUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = FitnessAppUITests;
+			sourceTree = "<group>";
+		};
+		28D4AEEF2F3BEB07004BFAFA /* FitnessAppWatch Watch App */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "FitnessAppWatch Watch App";
+			sourceTree = "<group>";
+		};
+		28D4AEFD2F3BEB09004BFAFA /* FitnessAppWatch Watch AppTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "FitnessAppWatch Watch AppTests";
+			sourceTree = "<group>";
+		};
+		28D4AF072F3BEB09004BFAFA /* FitnessAppWatch Watch AppUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "FitnessAppWatch Watch AppUITests";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -69,6 +139,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		28D4AEEB2F3BEB07004BFAFA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		28D4AEF72F3BEB09004BFAFA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		28D4AF012F3BEB09004BFAFA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -78,6 +169,9 @@
 				28D4AEC22F3BE84A004BFAFA /* FitnessApp */,
 				28D4AED02F3BE84D004BFAFA /* FitnessAppTests */,
 				28D4AEDA2F3BE84D004BFAFA /* FitnessAppUITests */,
+				28D4AEEF2F3BEB07004BFAFA /* FitnessAppWatch Watch App */,
+				28D4AEFD2F3BEB09004BFAFA /* FitnessAppWatch Watch AppTests */,
+				28D4AF072F3BEB09004BFAFA /* FitnessAppWatch Watch AppUITests */,
 				28D4AEC12F3BE84A004BFAFA /* Products */,
 			);
 			sourceTree = "<group>";
@@ -88,6 +182,9 @@
 				28D4AEC02F3BE84A004BFAFA /* FitnessApp.app */,
 				28D4AECD2F3BE84D004BFAFA /* FitnessAppTests.xctest */,
 				28D4AED72F3BE84D004BFAFA /* FitnessAppUITests.xctest */,
+				28D4AEEE2F3BEB07004BFAFA /* FitnessAppWatch Watch App.app */,
+				28D4AEFA2F3BEB09004BFAFA /* FitnessAppWatch Watch AppTests.xctest */,
+				28D4AF042F3BEB09004BFAFA /* FitnessAppWatch Watch AppUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -102,10 +199,12 @@
 				28D4AEBC2F3BE84A004BFAFA /* Sources */,
 				28D4AEBD2F3BE84A004BFAFA /* Frameworks */,
 				28D4AEBE2F3BE84A004BFAFA /* Resources */,
+				28D4AF122F3BEB09004BFAFA /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				28D4AF0D2F3BEB09004BFAFA /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				28D4AEC22F3BE84A004BFAFA /* FitnessApp */,
@@ -163,6 +262,74 @@
 			productReference = 28D4AED72F3BE84D004BFAFA /* FitnessAppUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		28D4AEED2F3BEB07004BFAFA /* FitnessAppWatch Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 28D4AF0F2F3BEB09004BFAFA /* Build configuration list for PBXNativeTarget "FitnessAppWatch Watch App" */;
+			buildPhases = (
+				28D4AEEA2F3BEB07004BFAFA /* Sources */,
+				28D4AEEB2F3BEB07004BFAFA /* Frameworks */,
+				28D4AEEC2F3BEB07004BFAFA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				28D4AEEF2F3BEB07004BFAFA /* FitnessAppWatch Watch App */,
+			);
+			name = "FitnessAppWatch Watch App";
+			packageProductDependencies = (
+			);
+			productName = "FitnessAppWatch Watch App";
+			productReference = 28D4AEEE2F3BEB07004BFAFA /* FitnessAppWatch Watch App.app */;
+			productType = "com.apple.product-type.application";
+		};
+		28D4AEF92F3BEB09004BFAFA /* FitnessAppWatch Watch AppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 28D4AF132F3BEB09004BFAFA /* Build configuration list for PBXNativeTarget "FitnessAppWatch Watch AppTests" */;
+			buildPhases = (
+				28D4AEF62F3BEB09004BFAFA /* Sources */,
+				28D4AEF72F3BEB09004BFAFA /* Frameworks */,
+				28D4AEF82F3BEB09004BFAFA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				28D4AEFC2F3BEB09004BFAFA /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				28D4AEFD2F3BEB09004BFAFA /* FitnessAppWatch Watch AppTests */,
+			);
+			name = "FitnessAppWatch Watch AppTests";
+			packageProductDependencies = (
+			);
+			productName = "FitnessAppWatch Watch AppTests";
+			productReference = 28D4AEFA2F3BEB09004BFAFA /* FitnessAppWatch Watch AppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		28D4AF032F3BEB09004BFAFA /* FitnessAppWatch Watch AppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 28D4AF162F3BEB09004BFAFA /* Build configuration list for PBXNativeTarget "FitnessAppWatch Watch AppUITests" */;
+			buildPhases = (
+				28D4AF002F3BEB09004BFAFA /* Sources */,
+				28D4AF012F3BEB09004BFAFA /* Frameworks */,
+				28D4AF022F3BEB09004BFAFA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				28D4AF062F3BEB09004BFAFA /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				28D4AF072F3BEB09004BFAFA /* FitnessAppWatch Watch AppUITests */,
+			);
+			name = "FitnessAppWatch Watch AppUITests";
+			packageProductDependencies = (
+			);
+			productName = "FitnessAppWatch Watch AppUITests";
+			productReference = 28D4AF042F3BEB09004BFAFA /* FitnessAppWatch Watch AppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -184,6 +351,17 @@
 						CreatedOnToolsVersion = 26.2;
 						TestTargetID = 28D4AEBF2F3BE84A004BFAFA;
 					};
+					28D4AEED2F3BEB07004BFAFA = {
+						CreatedOnToolsVersion = 26.2;
+					};
+					28D4AEF92F3BEB09004BFAFA = {
+						CreatedOnToolsVersion = 26.2;
+						TestTargetID = 28D4AEED2F3BEB07004BFAFA;
+					};
+					28D4AF032F3BEB09004BFAFA = {
+						CreatedOnToolsVersion = 26.2;
+						TestTargetID = 28D4AEED2F3BEB07004BFAFA;
+					};
 				};
 			};
 			buildConfigurationList = 28D4AEBB2F3BE84A004BFAFA /* Build configuration list for PBXProject "FitnessApp" */;
@@ -203,6 +381,9 @@
 				28D4AEBF2F3BE84A004BFAFA /* FitnessApp */,
 				28D4AECC2F3BE84D004BFAFA /* FitnessAppTests */,
 				28D4AED62F3BE84D004BFAFA /* FitnessAppUITests */,
+				28D4AEED2F3BEB07004BFAFA /* FitnessAppWatch Watch App */,
+				28D4AEF92F3BEB09004BFAFA /* FitnessAppWatch Watch AppTests */,
+				28D4AF032F3BEB09004BFAFA /* FitnessAppWatch Watch AppUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -223,6 +404,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		28D4AED52F3BE84D004BFAFA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		28D4AEEC2F3BEB07004BFAFA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		28D4AEF82F3BEB09004BFAFA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		28D4AF022F3BEB09004BFAFA /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -253,6 +455,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		28D4AEEA2F3BEB07004BFAFA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		28D4AEF62F3BEB09004BFAFA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		28D4AF002F3BEB09004BFAFA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -265,6 +488,21 @@
 			isa = PBXTargetDependency;
 			target = 28D4AEBF2F3BE84A004BFAFA /* FitnessApp */;
 			targetProxy = 28D4AED82F3BE84D004BFAFA /* PBXContainerItemProxy */;
+		};
+		28D4AEFC2F3BEB09004BFAFA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 28D4AEED2F3BEB07004BFAFA /* FitnessAppWatch Watch App */;
+			targetProxy = 28D4AEFB2F3BEB09004BFAFA /* PBXContainerItemProxy */;
+		};
+		28D4AF062F3BEB09004BFAFA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 28D4AEED2F3BEB07004BFAFA /* FitnessAppWatch Watch App */;
+			targetProxy = 28D4AF052F3BEB09004BFAFA /* PBXContainerItemProxy */;
+		};
+		28D4AF0D2F3BEB09004BFAFA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 28D4AEED2F3BEB07004BFAFA /* FitnessAppWatch Watch App */;
+			targetProxy = 28D4AF0C2F3BEB09004BFAFA /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -390,6 +628,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = FitnessApp/FitnessApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = SVR9B7Y88N;
@@ -398,6 +637,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FitnessApp/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -434,6 +674,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = FitnessApp/FitnessApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = SVR9B7Y88N;
@@ -442,6 +683,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FitnessApp/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -575,6 +817,169 @@
 			};
 			name = Release;
 		};
+		28D4AF102F3BEB09004BFAFA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "FitnessAppWatch Watch App/FitnessAppWatch Watch App.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SVR9B7Y88N;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "FitnessAppWatch-Watch-App-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = FitnessAppWatch;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.kodai.FitnessApp;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kodai.FitnessApp.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Debug;
+		};
+		28D4AF112F3BEB09004BFAFA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "FitnessAppWatch Watch App/FitnessAppWatch Watch App.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SVR9B7Y88N;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "FitnessAppWatch-Watch-App-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = FitnessAppWatch;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.kodai.FitnessApp;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kodai.FitnessApp.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Release;
+		};
+		28D4AF142F3BEB09004BFAFA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SVR9B7Y88N;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.kodai.FitnessAppWatch-Watch-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FitnessAppWatch Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/FitnessAppWatch Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Debug;
+		};
+		28D4AF152F3BEB09004BFAFA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SVR9B7Y88N;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.kodai.FitnessAppWatch-Watch-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FitnessAppWatch Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/FitnessAppWatch Watch App";
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Release;
+		};
+		28D4AF172F3BEB09004BFAFA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SVR9B7Y88N;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.kodai.FitnessAppWatch-Watch-AppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = "FitnessAppWatch Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Debug;
+		};
+		28D4AF182F3BEB09004BFAFA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SVR9B7Y88N;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.kodai.FitnessAppWatch-Watch-AppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = "FitnessAppWatch Watch App";
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -610,6 +1015,33 @@
 			buildConfigurations = (
 				28D4AEE82F3BE84D004BFAFA /* Debug */,
 				28D4AEE92F3BE84D004BFAFA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		28D4AF0F2F3BEB09004BFAFA /* Build configuration list for PBXNativeTarget "FitnessAppWatch Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				28D4AF102F3BEB09004BFAFA /* Debug */,
+				28D4AF112F3BEB09004BFAFA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		28D4AF132F3BEB09004BFAFA /* Build configuration list for PBXNativeTarget "FitnessAppWatch Watch AppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				28D4AF142F3BEB09004BFAFA /* Debug */,
+				28D4AF152F3BEB09004BFAFA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		28D4AF162F3BEB09004BFAFA /* Build configuration list for PBXNativeTarget "FitnessAppWatch Watch AppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				28D4AF172F3BEB09004BFAFA /* Debug */,
+				28D4AF182F3BEB09004BFAFA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
