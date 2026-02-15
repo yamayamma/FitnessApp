@@ -117,11 +117,11 @@
 
 ### Implementation for User Story 3
 
-- [ ] T032 [US3] Create MenuViewModel as @Observable class with @Query for TrainingMenus, CRUD operations (create/update/delete menu, add/remove/reorder exercises), trigger WatchConnectivity sync on any change in FitnessApp/ViewModels/MenuViewModel.swift
-- [ ] T033 [US3] Create MenuManagementView with menu list, create/edit/delete menu UI, exercise add/remove/reorder within menu, exercise defaults (name, sets, weight, reps) input forms (FR-011, FR-012) in FitnessApp/Views/MenuManagementView.swift
-- [ ] T034 [US3] Implement menu sync via updateApplicationContext in WatchConnectivityManager: convert [TrainingMenu] to [MenuTransfer] JSON Data, send with timestamp, handle isWatchAppInstalled check (FR-013) in FitnessApp/WatchConnectivityManager.swift
-- [ ] T035 [US3] Update WatchSessionManager to receive menu data from applicationContext: decode [MenuTransfer] JSON, cache locally for MenuSelectionView display, handle decode errors gracefully in FitnessAppWatch Watch App/WatchSessionManager.swift
-- [ ] T036 [US3] Update FitnessApp/HomeView.swift with navigation link to MenuManagementView
+- [x] T032 [US3] Create MenuViewModel as @Observable class with @Query for TrainingMenus, CRUD operations (create/update/delete menu, add/remove/reorder exercises), trigger WatchConnectivity sync on any change in FitnessApp/ViewModels/MenuViewModel.swift
+- [x] T033 [US3] Create MenuManagementView with menu list, create/edit/delete menu UI, exercise add/remove/reorder within menu, exercise defaults (name, sets, weight, reps) input forms (FR-011, FR-012) in FitnessApp/Views/MenuManagementView.swift
+- [x] T034 [US3] Implement menu sync via updateApplicationContext in WatchConnectivityManager: convert [TrainingMenu] to [MenuTransfer] JSON Data, send with timestamp, handle isWatchAppInstalled check (FR-013) in FitnessApp/WatchConnectivityManager.swift
+- [x] T035 [US3] Update WatchSessionManager to receive menu data from applicationContext: decode [MenuTransfer] JSON, cache locally for MenuSelectionView display, handle decode errors gracefully in FitnessAppWatch Watch App/WatchSessionManager.swift
+- [x] T036 [US3] Update FitnessApp/HomeView.swift with navigation link to MenuManagementView
 
 **Checkpoint**: 全ユーザーストーリー (US1-US4) が独立して機能。フルシステムが動作
 
