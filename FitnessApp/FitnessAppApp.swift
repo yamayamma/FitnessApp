@@ -6,12 +6,20 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct FitnessAppApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            HomeView()
         }
+        .modelContainer(for: [
+            TrainingMenu.self,
+            Exercise.self,
+            WorkoutSession.self,
+            ExerciseResult.self,
+            SetResult.self
+        ])
     }
 }

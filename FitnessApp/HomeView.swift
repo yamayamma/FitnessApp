@@ -1,24 +1,21 @@
 import SwiftUI
 
-struct ContentView: View {
+struct HomeView: View {
     var body: some View {
         NavigationStack {
-            NavigationLink("Send to Watch") {
-                VStack(spacing: 16) {
-                    Button("Send Push Day") {
-                        WatchConnectivityManager.shared.sendWorkoutName("Push Day")
-                    }
-
-                    Button("Send Pull Day") {
-                        WatchConnectivityManager.shared.sendWorkoutName("Pull Day")
-                    }
+            List {
+                NavigationLink("ワークアウト履歴") {
+                    Text("Coming soon...")
                 }
-                .navigationTitle("Send")
+                NavigationLink("メニュー管理") {
+                    Text("Coming soon...")
+                }
             }
+            .navigationTitle("FitnessApp")
         }
     }
 }
 
 #Preview {
-    ContentView()
+    HomeView()
 }

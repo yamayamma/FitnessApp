@@ -25,10 +25,10 @@
 
 **Purpose**: プロジェクトディレクトリ構成の確立と基本設定
 
-- [ ] T001 Create project directory structure: `FitnessApp/Models/`, `FitnessApp/ViewModels/`, `FitnessApp/Views/`, `FitnessApp/Services/`, `FitnessAppWatch Watch App/ViewModels/`, `FitnessAppWatch Watch App/Views/`, `FitnessAppWatch Watch App/Services/`
-- [ ] T002 [P] Add HealthKit Privacy Descriptions to FitnessAppWatch-Watch-App-Info.plist: `NSHealthUpdateUsageDescription` = "This app records your strength training workouts to Apple Health." / `NSHealthShareUsageDescription` = "This app reads your heart rate during workouts to display real-time data." (FR-023)
-- [ ] T003 [P] Add `workout-processing` to `WKBackgroundModes` array in FitnessAppWatch-Watch-App-Info.plist (research.md §R5)
-- [ ] T004 Configure SwiftData modelContainer in FitnessApp/FitnessAppApp.swift (TrainingMenu, Exercise, WorkoutSession, ExerciseResult, SetResult) and FitnessAppWatch Watch App/FitnessAppWatchApp.swift (WorkoutSession, ExerciseResult, SetResult, HealthKitRetryItem) ※HealthKitRetryItem は T012 (Phase 2) で作成済み
+- [x] T001 Create project directory structure: `FitnessApp/Models/`, `FitnessApp/ViewModels/`, `FitnessApp/Views/`, `FitnessApp/Services/`, `FitnessAppWatch Watch App/ViewModels/`, `FitnessAppWatch Watch App/Views/`, `FitnessAppWatch Watch App/Services/`
+- [x] T002 [P] Add HealthKit Privacy Descriptions to FitnessAppWatch-Watch-App-Info.plist: `NSHealthUpdateUsageDescription` = "This app records your strength training workouts to Apple Health." / `NSHealthShareUsageDescription` = "This app reads your heart rate during workouts to display real-time data." (FR-023)
+- [x] T003 [P] Add `workout-processing` to `WKBackgroundModes` array in FitnessAppWatch-Watch-App-Info.plist (research.md §R5)
+- [x] T004 Configure SwiftData modelContainer in FitnessApp/FitnessAppApp.swift (TrainingMenu, Exercise, WorkoutSession, ExerciseResult, SetResult) and FitnessAppWatch Watch App/FitnessAppWatchApp.swift (WorkoutSession, ExerciseResult, SetResult, HealthKitRetryItem) ※HealthKitRetryItem は T012 (Phase 2) で作成済み
 
 ---
 

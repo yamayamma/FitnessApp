@@ -6,12 +6,23 @@
 //
 
 import SwiftUI
+import SwiftData
+import WatchConnectivity
 
 @main
 struct FitnessAppWatch_Watch_AppApp: App {
+    @State private var watchSessionManager = WatchSessionManager()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MenuSelectionView()
+                .environment(watchSessionManager)
         }
+        .modelContainer(for: [
+            WorkoutSession.self,
+            ExerciseResult.self,
+            SetResult.self,
+            HealthKitRetryItem.self
+        ])
     }
 }

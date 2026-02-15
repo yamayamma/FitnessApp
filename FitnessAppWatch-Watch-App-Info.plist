@@ -8,5 +8,9 @@
 	<array>
 		<string>workout-processing</string>
 	</array>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>This app records your strength training workouts to Apple Health.</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>This app reads your heart rate during workouts to display real-time data.</string>
 </dict>
 </plist>
