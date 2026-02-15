@@ -5,8 +5,8 @@
 brew "swiftlint"
 brew "swiftformat"
 
-# CI/CD and build tools
-brew "xcpretty"
-
 # Optional: Additional development tools
 # brew "fastlane"  # Uncomment if you need deployment automation
+
+# Note: xcpretty is installed as a Ruby gem, not via Homebrew
+# Install it with: gem install xcpretty

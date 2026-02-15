@@ -22,13 +22,16 @@ This project uses the following tools to maintain code quality and consistency:
 ### Install Development Tools
 
 ```bash
-# Install all tools at once using Brewfile
+# Install Swift tools using Brewfile
 brew bundle
+
+# Install xcpretty (Ruby gem for formatting xcodebuild output)
+gem install xcpretty
 
 # Or install individually
 brew install swiftlint
 brew install swiftformat
-brew install xcpretty
+gem install xcpretty
 ```
 
 ### Setup Git Hooks
