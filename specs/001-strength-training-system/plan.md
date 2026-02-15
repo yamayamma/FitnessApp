@@ -149,6 +149,18 @@ watchOS ターゲットからも同じソースファイルを Target Membership
 
 ## Phase 2: Tasks
 
-**Status**: ⏳ Pending — 次コマンド `/speckit.tasks` で生成
+**Status**: ✅ Complete
 
-**Output**: [tasks.md](tasks.md) (未生成)
+**Output**: [tasks.md](tasks.md)
+
+| Metric | Value |
+|--------|-------|
+| 総タスク数 | 39 |
+| Phase 1: Setup | 4 tasks |
+| Phase 2: Foundational | 8 tasks |
+| Phase 3: US1 ワークアウト実行 (P1) | 11 tasks |
+| Phase 4: US4 データ保存・連携 (P2) | 4 tasks |
+| Phase 5: US2 履歴管理 (P2) | 4 tasks |
+| Phase 6: US3 メニュー管理 (P3) | 5 tasks |
+| Phase 7: Polish | 3 tasks |
+| MVP スコープ | Phase 1-3 (US1 のみ, 23 tasks) |
