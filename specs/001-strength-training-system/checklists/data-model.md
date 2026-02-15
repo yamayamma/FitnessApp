@@ -27,7 +27,7 @@
 ## Requirement Completeness — JSON / Codable
 
 - [ ] CHK012 — JSON エクスポート形式のスキーマが data-model.md で定義されているが、そのスキーマが spec.md の FR-014（「JSON 変換可能な構造」）の受け入れ基準として十分か？ [Measurability, Spec §FR-014]
-- [ ] CHK013 — SwiftData `@Model` と `Codable` の併用時の制約（`@Relationship` プロパティの JSON シリアライズ除外等）が要件として認識されているか？ [Gap, Assumption]
+- [ ] CHK013 — SwiftData `@Model` が Codable に自動準拠しないため TransferModels（`MenuTransfer`, `WorkoutResultTransfer` 等）を分離している設計意図が要件として文書化されているか？ [Clarity, Assumption, data-model.md §WatchConnectivity Transfer Models]
 - [ ] CHK014 — JSON の日付フォーマット要件は定義されているか？（ISO 8601 と推測されるが明示されていない） [Clarity, data-model.md §JSON Schema]
 - [ ] CHK015 — TransferModels（`MenuTransfer`, `WorkoutResultTransfer` 等）と `@Model` エンティティ間のマッピング要件は定義されているか？ [Gap, data-model.md §WatchConnectivity Transfer Models]
 
@@ -35,14 +35,14 @@
 
 - [ ] CHK016 — `cancelled` セッションのデータ保持期間・クリーンアップ方針の要件は定義されているか？（FR-016 は「保持する」のみで、無期限保持かどうかが不明） [Clarity, Spec §FR-016]
 - [ ] CHK017 — SwiftData マイグレーション（スキーマバージョニング）の要件は定義されているか？（将来のフィールド追加時のデータ移行） [Gap]
-- [ ] CHK018 — iOS と watchOS で独立した SwiftData ストアを持つことの要件は明記されているか？（research.md で調査済みだが spec/data-model に反映されているか） [Consistency, research.md §R2 vs data-model.md]
+- [ ] CHK018 — iOS と watchOS で独立した SwiftData ストアを持つことが要件として明記されているか？（research.md §R2 で調査済みだが、data-model.md のヘッダーは「コード共有」のみ記載、「データストア独立」が未記載） [Gap, Consistency, research.md §R2 vs data-model.md]
 - [ ] CHK019 — watchOS 側の SwiftData ストレージ容量制限に関する要件は定義されているか？ [Gap, Edge Case]
 
 ## Requirement Completeness — Future Extensibility
 
-- [ ] CHK020 — 将来の MCP サーバー入出力フォーマットとの互換性が JSON スキーマレベルで考慮されているか？ [Coverage, Constitution §III]
-- [ ] CHK021 — 将来の wger API 連携時のデータマッピング（wger の exercise ID との対応等）が拡張可能な設計として要件に記載されているか？ [Coverage, Constitution §III]
-- [ ] CHK022 — data-model.md の JSON スキーマにバージョン番号フィールドが含まれていないが、将来の後方互換性の要件は定義されているか？ [Gap]
+- [ ] CHK020 — 将来の MCP サーバー入出力フォーマットと wger API 連携への拡張性が JSON スキーマレベルで考慮されているか？（exercise ID の外部マッピング用フィールド等） [Coverage, Constitution §III]
+- [ ] CHK021 — data-model.md の JSON スキーマにバージョン番号フィールドが含まれていないが、将来の後方互換性の要件は定義されているか？ [Gap]
+- [ ] CHK022 — 重量の単位系要件は定義されているか？（data-model.md は `kg` 固定だが、spec.md に単位記載なし。lb サポートやロケール切替は将来スコープか） [Gap, Clarity]
 
 ## Requirement Consistency — Cross-Document Alignment
 
