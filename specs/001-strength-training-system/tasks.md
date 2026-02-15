@@ -83,10 +83,10 @@
 
 ### Implementation for User Story 4
 
-- [ ] T024 [US4] Implement workout result transfer via WCSession.transferUserInfo in FitnessAppWatch Watch App/WatchSessionManager.swift: convert WorkoutSession + ExerciseResults + SetResults to WorkoutResultTransfer, encode with JSONEncoder (.iso8601 date strategy), send only completed sessions (FR-014, FR-016)
-- [ ] T025 [P] [US4] Create WorkoutDataService with receive and persist logic: decode WorkoutResultTransfer from userInfo, create WorkoutSession + ExerciseResult + SetResult in SwiftData, sessionId-based deduplication check (FR-026) in FitnessApp/Services/WorkoutDataService.swift
-- [ ] T026 [US4] Update WatchConnectivityManager to handle incoming workout results in session(_:didReceiveUserInfo:): extract type=="workoutResult", delegate to WorkoutDataService for persistence in FitnessApp/WatchConnectivityManager.swift
-- [ ] T027 [US4] Verify end-to-end data integrity: ensure JSON round-trip (Codable conformance) works for all Transfer models, validate sessionId linkage between HealthKit metadata and SwiftData records (FR-014, FR-026)
+- [x] T024 [US4] Implement workout result transfer via WCSession.transferUserInfo in FitnessAppWatch Watch App/WatchSessionManager.swift: convert WorkoutSession + ExerciseResults + SetResults to WorkoutResultTransfer, encode with JSONEncoder (.iso8601 date strategy), send only completed sessions (FR-014, FR-016)
+- [x] T025 [P] [US4] Create WorkoutDataService with receive and persist logic: decode WorkoutResultTransfer from userInfo, create WorkoutSession + ExerciseResult + SetResult in SwiftData, sessionId-based deduplication check (FR-026) in FitnessApp/Services/WorkoutDataService.swift
+- [x] T026 [US4] Update WatchConnectivityManager to handle incoming workout results in session(_:didReceiveUserInfo:): extract type=="workoutResult", delegate to WorkoutDataService for persistence in FitnessApp/WatchConnectivityManager.swift
+- [x] T027 [US4] Verify end-to-end data integrity: ensure JSON round-trip (Codable conformance) works for all Transfer models, validate sessionId linkage between HealthKit metadata and SwiftData records (FR-014, FR-026)
 
 **Checkpoint**: US4 完了 — Watch→iPhone データパイプラインが機能。sessionId で HealthKit とローカル DB を突合可能
 

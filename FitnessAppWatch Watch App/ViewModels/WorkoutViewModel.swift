@@ -79,6 +79,9 @@ final class WorkoutViewModel {
     /// HealthKitマネージャー
     var healthKitManager: WatchHealthKitManager
     
+    /// WatchSessionManager参照（ワークアウト結果転送用）
+    var sessionManager: WatchSessionManager?
+    
     // MARK: - Current Exercise Info
     
     /// 現在の種目情報
@@ -386,6 +389,9 @@ final class WorkoutViewModel {
                 modelContext: context
             )
         }
+        
+        // Watch → iPhone 結果転送 (T024, FR-014)
+        sessionManager?.sendWorkoutResult(session: session)
         
         workoutStatus = .completed
         isWorkoutCompleted = true

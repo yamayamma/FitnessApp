@@ -79,5 +79,67 @@ final class WatchSessionManager: NSObject, WCSessionDelegate {
             // デコード失敗時は既存メニューを保持
         }
     }
+    
+    // MARK: - Workout Result Transfer (T024)
+    
+    /// ワークアウト完了結果をiPhoneへ転送（FR-014, FR-016）
+    /// completedセッションのみ送信。cancelledは送信しない。
+    func sendWorkoutResult(session: WorkoutSession) {
+        guard session.status == .completed else {
+            print("Skipping transfer: session status is \(session.statusRawValue)")
+            return
+        }
+        
+        guard let endDate = session.endDate else {
+            print("Skipping transfer: session has no endDate")
+            return
+        }
+        
+        // WorkoutResultTransferに変換
+        let exerciseTransfers = session.exerciseResults
+            .sorted { $0.sortOrder < $1.sortOrder }
+            .map { exercise in
+                ExerciseResultTransfer(
+                    exerciseId: exercise.exerciseId,
+                    exerciseName: exercise.exerciseName,
+                    sortOrder: exercise.sortOrder,
+                    sets: exercise.setResults
+                        .sorted { $0.setNumber < $1.setNumber }
+                        .map { set in
+                            SetResultTransfer(
+                                setNumber: set.setNumber,
+                                weight: set.weight,
+                                reps: set.reps,
+                                completedAt: set.completedAt
+                            )
+                        }
+                )
+            }
+        
+        let resultTransfer = WorkoutResultTransfer(
+            sessionId: session.sessionId,
+            startDate: session.startDate,
+            endDate: endDate,
+            menuId: session.menuId,
+            menuName: session.menuName,
+            totalDuration: session.totalDuration,
+            status: session.statusRawValue,
+            exercises: exerciseTransfers
+        )
+        
+        // JSONエンコードしてtransferUserInfoで送信
+        do {
+            let data = try JSONEncoder.fitnessApp.encode(resultTransfer)
+            let userInfo: [String: Any] = [
+                "type": "workoutResult",
+                "sessionId": session.sessionId.uuidString,
+                "data": data
+            ]
+            WCSession.default.transferUserInfo(userInfo)
+            print("Workout result transferred: \(session.sessionId)")
+        } catch {
+            print("Failed to encode workout result: \(error)")
+        }
+    }
 }
 
