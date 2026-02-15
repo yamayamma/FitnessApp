@@ -131,9 +131,9 @@
 
 **Purpose**: 全ストーリーにまたがる改善と品質向上
 
-- [ ] T037 [P] Code cleanup: remove unused existing code from WorkoutView.swift (replaced by ActiveWorkoutView), verify all FR/NFR traceability, ensure Codable conformance for all models
-- [ ] T038 [P] Error handling hardening: HealthKit unavailable fallback (hide HK UI), HealthKit permission denied guidance message, WatchConnectivity decode error logging, SwiftData save error handling across all ViewModels
-- [ ] T039 Run quickstart.md validation: execute build & run steps (iPhone scheme + Watch scheme), verify menu sync flow, verify workout recording flow, verify history display, verify SC-001 (メニュー選択画面からワークアウト完了まで 5 タップ以内)
+- [x] T037 [P] Code cleanup: remove unused existing code from WorkoutView.swift (replaced by ActiveWorkoutView), verify all FR/NFR traceability, ensure Codable conformance for all models
+- [x] T038 [P] Error handling hardening: HealthKit unavailable fallback (hide HK UI), HealthKit permission denied guidance message, WatchConnectivity decode error logging, SwiftData save error handling across all ViewModels
+- [x] T039 Run quickstart.md validation: execute build & run steps (iPhone scheme + Watch scheme), verify menu sync flow, verify workout recording flow, verify history display, verify SC-001 (メニュー選択画面からワークアウト完了まで 5 タップ以内)
 
 ---
 

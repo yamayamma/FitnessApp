@@ -10,16 +10,29 @@ import SwiftData
 
 @main
 struct FitnessAppApp: App {
+    let modelContainer: ModelContainer
+    
+    init() {
+        do {
+            modelContainer = try ModelContainer(for:
+                TrainingMenu.self,
+                Exercise.self,
+                WorkoutSession.self,
+                ExerciseResult.self,
+                SetResult.self
+            )
+            
+            // WatchConnectivityManagerにModelContextを設定
+            WatchConnectivityManager.shared.modelContext = modelContainer.mainContext
+        } catch {
+            fatalError("Failed to create ModelContainer: \(error)")
+        }
+    }
+    
     var body: some Scene {
         WindowGroup {
             HomeView()
         }
-        .modelContainer(for: [
-            TrainingMenu.self,
-            Exercise.self,
-            WorkoutSession.self,
-            ExerciseResult.self,
-            SetResult.self
-        ])
+        .modelContainer(modelContainer)
     }
 }

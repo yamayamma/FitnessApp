@@ -13,16 +13,26 @@ import WatchConnectivity
 struct FitnessAppWatch_Watch_AppApp: App {
     @State private var watchSessionManager = WatchSessionManager()
     
+    let modelContainer: ModelContainer
+    
+    init() {
+        do {
+            modelContainer = try ModelContainer(for:
+                WorkoutSession.self,
+                ExerciseResult.self,
+                SetResult.self,
+                HealthKitRetryItem.self
+            )
+        } catch {
+            fatalError("Failed to create ModelContainer: \(error)")
+        }
+    }
+    
     var body: some Scene {
         WindowGroup {
             MenuSelectionView()
                 .environment(watchSessionManager)
         }
-        .modelContainer(for: [
-            WorkoutSession.self,
-            ExerciseResult.self,
-            SetResult.self,
-            HealthKitRetryItem.self
-        ])
+        .modelContainer(modelContainer)
     }
 }
