@@ -100,10 +100,10 @@
 
 ### Implementation for User Story 2
 
-- [ ] T028 [US2] Create HistoryViewModel as @Observable class with @Query for completed WorkoutSessions sorted by date descending, filtered to exclude cancelled status, basic statistics calculation (total duration) in FitnessApp/ViewModels/HistoryViewModel.swift
-- [ ] T029 [US2] Create HistoryListView with today's workouts section at top, past workouts in date-descending order, each row showing menu name, date, duration, navigation to detail view (FR-008, FR-010) in FitnessApp/Views/HistoryListView.swift
-- [ ] T030 [US2] Create WorkoutDetailView displaying workout session details: exercise list with set count, individual set details (weight, reps, completedAt), total time, menu name (FR-009) in FitnessApp/Views/WorkoutDetailView.swift
-- [ ] T031 [US2] Update FitnessApp/HomeView.swift with NavigationStack and navigation link to HistoryListView
+- [x] T028 [US2] Create HistoryViewModel as @Observable class with @Query for completed WorkoutSessions sorted by date descending, filtered to exclude cancelled status, basic statistics calculation (total duration) in FitnessApp/ViewModels/HistoryViewModel.swift
+- [x] T029 [US2] Create HistoryListView with today's workouts section at top, past workouts in date-descending order, each row showing menu name, date, duration, navigation to detail view (FR-008, FR-010) in FitnessApp/Views/HistoryListView.swift
+- [x] T030 [US2] Create WorkoutDetailView displaying workout session details: exercise list with set count, individual set details (weight, reps, completedAt), total time, menu name (FR-009) in FitnessApp/Views/WorkoutDetailView.swift
+- [x] T031 [US2] Update FitnessApp/HomeView.swift with NavigationStack and navigation link to HistoryListView
 
 **Checkpoint**: US1, US2, US4 が独立して機能。Watch で記録 → iPhone で履歴確認のフルフローが動作
 

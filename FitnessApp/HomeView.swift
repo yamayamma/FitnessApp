@@ -4,11 +4,18 @@ struct HomeView: View {
     var body: some View {
         NavigationStack {
             List {
-                NavigationLink("ワークアウト履歴") {
-                    Text("Coming soon...")
+                // US2: 履歴管理
+                NavigationLink {
+                    HistoryListView()
+                } label: {
+                    Label("ワークアウト履歴", systemImage: "clock.arrow.circlepath")
                 }
-                NavigationLink("メニュー管理") {
-                    Text("Coming soon...")
+                
+                // US3: メニュー管理
+                NavigationLink {
+                    MenuManagementView()
+                } label: {
+                    Label("メニュー管理", systemImage: "list.clipboard")
                 }
             }
             .navigationTitle("FitnessApp")
