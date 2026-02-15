@@ -49,7 +49,10 @@ HealthKit にデータが保存されることを確認できる。
 6. **Given** セッションが一時停止中, **When** ユーザーが再開をタップする, **Then** セッション状態が `active` に戻りタイマーが再開する
 7. **Given** ワークアウトが進行中または一時停止中, **When** ユーザーがキャンセルをタップする, **Then** セッション状態が `cancelled` に遷移しデータは HealthKit に保存されない
 8. **Given** ワークアウトが進行中, **When** ユーザーがワークアウト完了をタップする, **Then** セッション状態が `completed` になり HKWorkout として HealthKit に保存され、metadata に sessionId（UUID）が含まれる
-9. **Given** 前回クラッシュにより `active` 状態のセッションがローカル DB に残っている, **When** Watch アプリが起動する, **Then** 継続または破棄の選択ダイアログが表示される
+9. **Given** 前回クラッシュにより `active` 状態のセッションがローカル DB に残っている, **When** Watch アプリが起動する, **Then** 起動直後に「続行」「破棄」の選択ダイアログが表示される
+10. **Given** メニュー内の現在の種目の最終セットが完了した, **When** ユーザーが「次セット」ボタンをタップする, **Then** 自動的に次の種目の第 1 セットに遷移し、種目名・デフォルト重量・レップ数が更新される
+11. **Given** ワークアウトが進行中, **When** ユーザーがキャンセルをタップする, **Then** 確認ダイアログ（「ワークアウトをキャンセルしますか？」）が表示され、確認後にセッション状態が `cancelled` に遷移する
+12. **Given** メニュー内の最終種目の最終セットが完了した, **When** ユーザーが「次セット」ボタンをタップする, **Then** ワークアウト完了確認画面に遷移する
 
 ---
 
@@ -115,12 +118,15 @@ sessionId（UUID）で紐付けられる。
 ### Edge Cases
 
 - ワークアウト中に Watch アプリがクラッシュした場合: 各セット完了時にローカル DB へインクリメンタル保存済みのため、完了済みセットのデータは保持される。セッションは `active` 状態のまま残り、次回起動時にユーザーが継続または破棄を選択する。
-- HealthKit への保存が失敗した場合: ローカル DB には即座に保存済みのため、自動リトライキューで HealthKit への再試行を行う。リトライ回数上限到達後の挙動は要検討。
+- HealthKit への保存が失敗した場合: ローカル DB には即座に保存済みのため、自動リトライキューで HealthKit への再試行を行う。最大リトライ回数は 10 回。超過時は `abandoned` ステータスとなり、次回アプリ起動時にユーザーに通知（バナー表示）する。
 - iPhone と Watch 間の WatchConnectivity が切断されている場合: `updateApplicationContext` は次回接続時に最新コンテキストが自動配信されるため、特別なリトライ処理は不要。Watch 側はローカルキャッシュで前回のメニューを表示する。
-- ワークアウト中にバッテリーが低下した場合の動作は？
-- 同時に複数のワークアウトセッションが開始された場合の挙動は？
-- セッションが `paused` 状態のまま長時間放置された場合の扱いは？
-- `cancelled` されたセッションのローカル DB データ: `cancelled` ステータスのまま保持する。履歴一覧では非表示とし、誤キャンセル時の復旧に備える。
+- ワークアウト中にバッテリーが低下した場合: クラッシュリカバリと同様にインクリメンタル保存により完了済みセットは保護される。
+- 同時に複数のワークアウトセッションが開始された場合: HKWorkoutSession は watchOS で同時に 1 つのみ。アプリレベルでも 1 セッション制約を課す。
+- セッションが `paused` 状態のまま長時間放置された場合: 自動タイムアウトは設けない（ユーザーの手動操作を待つ）。
+- `cancelled` されたセッションのローカル DB データ: `cancelled` ステータスのまま Watch ローカルに無期限保持する。iPhone へは送信しない。履歴一覧では非表示とし、誤キャンセル時の復旧に備える。
+- HealthKit が利用不可（`HKHealthStore.isHealthDataAvailable() == false`）の場合: ローカル DB のみで動作する。HealthKit 関連 UI を非表示にする。
+- ユーザーが HealthKit 許可を拒否した場合: ローカル DB のみに保存し、「HealthKit 連携が無効です。設定アプリから有効化できます」の案内を表示する。
+- メニュー未同期状態（Watch にメニューが 0 件）: ガイダンスメッセージを表示し、メニューなしでのワークアウト開始オプションを提供する。
 
 ## Requirements *(mandatory)*
 
@@ -128,16 +134,26 @@ sessionId（UUID）で紐付けられる。
 
 - **FR-001**: Watch アプリでワークアウトセッションの開始・一時停止・再開・完了・キャンセルができなければならない（状態遷移: `active` → `paused` → `completed` / `cancelled`）
 - **FR-002**: ワークアウト中に経過時間がリアルタイム表示されなければならない
-- **FR-003**: ワークアウト中に心拍数が表示されなければならない
-- **FR-004**: Watch のワークアウト画面は上部にセット数・重量等の可変値をワンタップで記録・変更できるエリア、下部にフルワイドの「次セット」ボタンを配置しなければならない
+- **FR-003**: ワークアウト中に心拍数（bpm）がリアルタイム表示されなければならない。MVP では `HKLiveWorkoutDataSource` 経由のライブデータのみを使用し、明示的な `.heartRate` Read 権限は将来の履歴参照用途に予約する
+- **FR-004**: Watch のワークアウト画面は上部にセット数・重量・レップ数の可変値をワンタップで記録・変更できるエリア、下部にフルワイドの「次セット」ボタンを配置しなければならない。重量変更は ±2.5kg 刻みの増減操作で行い、レップ数変更は ±1 刻みの増減操作で行う
 - **FR-005**: ワークアウト完了時に HKWorkout として HealthKit に保存されなければならない
 - **FR-006**: HKWorkout の metadata に sessionId（UUID）が含まれなければならない
 - **FR-007**: ワークアウト詳細データ（種目、レップ数、重量、セット完了時刻）がローカル DB に即座に保存されなければならない（HealthKit 保存より先行）
 - **FR-015**: HealthKit への保存が失敗した場合、自動リトライキューに登録しバックグラウンドで再試行しなければならない
 - **FR-008**: iPhone アプリで当日および過去のワークアウト履歴が一覧表示されなければならない（`cancelled` セッションは非表示）
-- **FR-016**: `cancelled` されたセッションのデータはローカル DB に `cancelled` ステータスのまま保持しなければならない（削除しない）
+- **FR-016**: `cancelled` されたセッションのデータはローカル DB に `cancelled` ステータスのまま無期限に保持しなければならない（自動クリーンアップなし）。`cancelled` データは iPhone へ送信せず Watch ローカルのみに保持する。iPhone 履歴一覧には表示しない
 - **FR-017**: 各セット完了時にローカル DB へインクリメンタルに保存しなければならない（クラッシュ耐性確保）
-- **FR-018**: アプリ起動時に `active` 状態の未完了セッションが存在する場合、継続または破棄の選択をユーザーに提示しなければならない
+- **FR-018**: アプリ起動時に `active` 状態の未完了セッションが存在する場合、継続または破棄の選択をユーザーに提示しなければならない。ダイアログは Watch アプリ起動直後（メニュー一覧表示前）に表示し、ボタンテキストは「続行」「破棄」とする。破棄時はセッションを `cancelled` に遷移しメニュー一覧へ戻る
+- **FR-019**: メニュー内の最終セット完了時に自動で次の種目に遷移しなければならない（メニューの種目順序 `sortOrder` に従う）。ユーザーはスワイプ操作で任意の種目にスキップまたは戻ることもできる。最終種目の最終セット完了時はワークアウト完了確認画面に遷移する
+- **FR-020**: キャンセル操作時に確認ダイアログ（「ワークアウトをキャンセルしますか？」/「キャンセル」「続行」ボタン）を表示しなければならない（誤タップによるデータ損失防止）
+- **FR-021**: Watch の画面遷移フローは「メニュー一覧 → ワークアウト実行 → サマリー」の順に進行する。サマリー画面には合計時間・種目数・総セット数を表示し、「閉じる」ボタンでメニュー一覧に戻る
+- **FR-022**: ワークアウト中の一時停止状態（`paused`）は視覚的に明示しなければならない（経過時間表示の一時停止、背景色またはアイコンの変化）
+- **FR-023**: Info.plist に以下の Privacy Description テキストを設定しなければならない:
+  - `NSHealthUpdateUsageDescription`: "This app records your strength training workouts to Apple Health."
+  - `NSHealthShareUsageDescription`: "This app reads your heart rate during workouts to display real-time data."
+- **FR-024**: 経過時間の表示フォーマットは `MM:SS` とする。1 時間以上の場合は `H:MM:SS` に切り替える
+- **FR-025**: メニューが 0 件（未同期状態）の場合、空状態 UI（「iPhone アプリでメニューを作成してください」等のガイダンスメッセージ）を表示しなければならない。メニューなしでのワークアウト開始オプションも提供する
+- **FR-026**: `sessionId` はワークアウト開始時（`HKWorkoutSession` 生成と同時）に `UUID()` で生成し、ローカル DB、HealthKit metadata、WatchConnectivity transfer の全箇所で同一値を使用する
 - **FR-009**: 各ワークアウトの詳細（種目、セット数、時間）が確認可能でなければならない
 - **FR-010**: 合計時間などの基本統計が表示されなければならない
 - **FR-011**: iPhone でトレーニングメニューを作成・編集できなければならない
@@ -152,16 +168,19 @@ sessionId（UUID）で紐付けられる。
 - **NFR-003**: Apple App Store 審査基準に準拠しなければならない
 - **NFR-004**: ユーザーデータはローカル保存のみとする
 - **NFR-005**: ローカル DB には SwiftData（`@Model` マクロ）を使用しなければならない
+- **NFR-006**: 重量の単位は kg 固定とする（MVP）。将来の lb サポートは Out of Scope に明記
+- **NFR-007**: 日時のシリアライズフォーマットは ISO 8601（`yyyy-MM-dd'T'HH:mm:ssZ`）を使用しなければならない。`JSONEncoder.dateEncodingStrategy = .iso8601` を標準設定とする
+- **NFR-008**: iOS と watchOS は同一のモデルソースコードを Target Membership で共有するが、SwiftData ストアは各デバイスで独立とする（データは WatchConnectivity 経由でのみ同期）
 
 ### Key Entities
 
 全エンティティは SwiftData `@Model` で定義する。iPhone と Watch で同一のモデルコードを共有フレームワーク経由で利用する。
 
-- **WorkoutSession**: ワークアウトセッションを表す。sessionId（UUID）, startDate, endDate, menuId, totalDuration, status（`active` / `paused` / `completed` / `cancelled`）を持つ。
-- **ExerciseResult**: セッション内の各種目の結果。exerciseId, setResults 配列, exerciseName を持つ。
-- **SetResult**: 各セットの結果。weight, reps, setNumber, completedAt（セット完了時刻のタイムスタンプ）を持つ。
-- **TrainingMenu**: トレーニングメニューのプリセット。menuId, name, exercises 配列を持つ。
-- **Exercise**: 種目の定義。exerciseId, name, defaultSets を持つ。
+- **WorkoutSession**: ワークアウトセッションを表す。id (SwiftData PK), sessionId（UUID, HealthKit/WC 紐付け用）, startDate, endDate, menuId, menuName, totalDuration, status（`active` / `paused` / `completed` / `cancelled`）, createdAt を持つ。`id` は SwiftData フレームワークが管理する主キー、`sessionId` はクロスシステム識別子として HealthKit metadata・WatchConnectivity transfer で使用する。
+- **ExerciseResult**: セッション内の各種目の結果。exerciseId, exerciseName（非正規化）, setResults 配列, sortOrder を持つ。`exerciseId` は UUID 値による間接参照（watchOS 側に TrainingMenu/Exercise エンティティが存在しないため、`@Relationship` ではなく値コピーで参照する）。
+- **SetResult**: 各セットの結果。weight (kg), reps, setNumber, completedAt（セット完了時刻のタイムスタンプ）を持つ。
+- **TrainingMenu**: トレーニングメニューのプリセット。menuId, name, exercises 配列, createdAt, updatedAt を持つ。
+- **Exercise**: 種目の定義。exerciseId, name, defaultSets, defaultWeight (kg), defaultReps, sortOrder を持つ。`defaultWeight`/`defaultReps` はワークアウト開始時の初期値としてセット入力画面に自動反映される（FR-004 のワンタップ記録を実現するため）。
 
 ## Success Criteria *(mandatory)*
 
@@ -183,3 +202,10 @@ sessionId（UUID）で紐付けられる。
 - AI によるメニュー生成
 - 自動スケジューリング
 - 高度な分析・レポート機能
+- lb/lbs 重量単位サポート（kg 固定）
+- Always On Display (AOD) カスタマイズ
+- JSON スキーマバージョニング
+- SwiftData VersionedSchema によるマイグレーション管理
+- HealthKit 履歴データの読み取り（.heartRate/.activeEnergyBurned の Read 権限活用）
+- Digital Crown による値入力操作
+- Apple Watch 画面サイズ別の個別レイアウト最適化（SwiftUI アダプティブレイアウトに依存）

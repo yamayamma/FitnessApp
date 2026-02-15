@@ -74,6 +74,8 @@ iPhone ↔ Apple Watch 間の WatchConnectivity 通信プロトコル定義。
 **Trigger**: ワークアウト完了時（status == completed）  
 **Delivery**: 順序保証あり、オフライン時はキューイング
 
+> **cancelled データの可視性ポリシー**: `cancelled` セッションは iPhone へ送信しない。Watch ローカルにのみ無期限保持する（FR-016）。これにより iPhone の履歴一覧には completed のみが表示される。
+
 #### Request Format
 
 ```swift
@@ -96,8 +98,8 @@ iPhone ↔ Apple Watch 間の WatchConnectivity 通信プロトコル定義。
   "required": ["sessionId", "startDate", "endDate", "totalDuration", "status", "exercises"],
   "properties": {
     "sessionId": { "type": "string", "format": "uuid" },
-    "startDate": { "type": "string", "format": "date-time" },
-    "endDate": { "type": "string", "format": "date-time" },
+    "startDate": { "type": "string", "format": "date-time", "description": "ISO 8601 format (NFR-007)" },
+    "endDate": { "type": "string", "format": "date-time", "description": "ISO 8601 format (NFR-007)" },
     "menuId": { "type": "string", "format": "uuid", "nullable": true },
     "menuName": { "type": "string", "nullable": true },
     "totalDuration": { "type": "number", "minimum": 0 },
