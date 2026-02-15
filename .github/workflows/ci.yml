@@ -58,40 +58,43 @@ jobs:
       with:
         xcode-version: '15.2'
     
+    - name: Install xcpretty
+      run: gem install xcpretty
+    
     - name: List available simulators
       run: xcrun simctl list devices available
     
     - name: Build iOS App
       run: |
-        xcodebuild clean build \
+        set -o pipefail && xcodebuild clean build \
           -project FitnessApp.xcodeproj \
           -scheme FitnessApp \
           -destination 'platform=iOS Simulator,name=iPhone 15 Pro,OS=17.2' \
           CODE_SIGN_IDENTITY="" \
           CODE_SIGNING_REQUIRED=NO \
-          | xcpretty && exit ${PIPESTATUS[0]}
+          | xcpretty
     
     - name: Run iOS Unit Tests
       run: |
-        xcodebuild test \
+        set -o pipefail && xcodebuild test \
           -project FitnessApp.xcodeproj \
           -scheme FitnessApp \
           -destination 'platform=iOS Simulator,name=iPhone 15 Pro,OS=17.2' \
           -only-testing:FitnessAppTests \
           CODE_SIGN_IDENTITY="" \
           CODE_SIGNING_REQUIRED=NO \
-          | xcpretty && exit ${PIPESTATUS[0]}
+          | xcpretty
     
     - name: Run iOS UI Tests
       run: |
-        xcodebuild test \
+        set -o pipefail && xcodebuild test \
           -project FitnessApp.xcodeproj \
           -scheme FitnessApp \
           -destination 'platform=iOS Simulator,name=iPhone 15 Pro,OS=17.2' \
           -only-testing:FitnessAppUITests \
           CODE_SIGN_IDENTITY="" \
           CODE_SIGNING_REQUIRED=NO \
-          | xcpretty && exit ${PIPESTATUS[0]}
+          | xcpretty
 
   test-watchos:
     name: Test watchOS App
@@ -107,29 +110,32 @@ jobs:
       with:
         xcode-version: '15.2'
     
+    - name: Install xcpretty
+      run: gem install xcpretty
+    
     - name: List available watch simulators
       run: xcrun simctl list devices available | grep Watch
     
     - name: Build watchOS App
       run: |
-        xcodebuild clean build \
+        set -o pipefail && xcodebuild clean build \
           -project FitnessApp.xcodeproj \
           -scheme "FitnessAppWatch Watch App" \
           -destination 'platform=watchOS Simulator,name=Apple Watch Series 9 (45mm),OS=10.2' \
           CODE_SIGN_IDENTITY="" \
           CODE_SIGNING_REQUIRED=NO \
-          | xcpretty && exit ${PIPESTATUS[0]}
+          | xcpretty
     
     - name: Run watchOS Unit Tests
       run: |
-        xcodebuild test \
+        set -o pipefail && xcodebuild test \
           -project FitnessApp.xcodeproj \
           -scheme "FitnessAppWatch Watch App" \
           -destination 'platform=watchOS Simulator,name=Apple Watch Series 9 (45mm),OS=10.2' \
           -only-testing:"FitnessAppWatch Watch AppTests" \
           CODE_SIGN_IDENTITY="" \
           CODE_SIGNING_REQUIRED=NO \
-          | xcpretty && exit ${PIPESTATUS[0]}
+          | xcpretty
 
   # Summary job that requires all tests to pass
   all-tests-passed:

@@ -47,8 +47,8 @@ echo -e "${GREEN}✅ All Swift files are properly formatted${NC}"
 if command -v swiftlint &> /dev/null; then
     echo "🔍 Running SwiftLint..."
     
-    # Create temp file list
-    TEMP_FILE=$(mktemp)
+    # Create temp file list with secure permissions
+    TEMP_FILE=$(mktemp -t swiftlint_files.XXXXXX)
     echo "$STAGED_SWIFT_FILES" > "$TEMP_FILE"
     
     # Run SwiftLint on staged files
