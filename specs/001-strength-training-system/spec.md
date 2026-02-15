@@ -126,7 +126,7 @@ sessionId（UUID）で紐付けられる。
 - `cancelled` されたセッションのローカル DB データ: `cancelled` ステータスのまま Watch ローカルに無期限保持する。iPhone へは送信しない。履歴一覧では非表示とし、誤キャンセル時の復旧に備える。
 - HealthKit が利用不可（`HKHealthStore.isHealthDataAvailable() == false`）の場合: ローカル DB のみで動作する。HealthKit 関連 UI を非表示にする。
 - ユーザーが HealthKit 許可を拒否した場合: ローカル DB のみに保存し、「HealthKit 連携が無効です。設定アプリから有効化できます」の案内を表示する。
-- メニュー未同期状態（Watch にメニューが 0 件）: ガイダンスメッセージを表示し、メニューなしでのワークアウト開始オプションを提供する。
+- メニュー未同期状態（Watch にメニューが 0 件）: ガイダンスメッセージを表示し、「フリーワークアウト」開始オプションを提供する。フリーワークアウトモードでは種目名を手入力し、セット数無制限で自由に記録する。menuId = nil, menuName = nil として WorkoutSession を作成する。
 
 ## Requirements *(mandatory)*
 
@@ -152,7 +152,7 @@ sessionId（UUID）で紐付けられる。
   - `NSHealthUpdateUsageDescription`: "This app records your strength training workouts to Apple Health."
   - `NSHealthShareUsageDescription`: "This app reads your heart rate during workouts to display real-time data."
 - **FR-024**: 経過時間の表示フォーマットは `MM:SS` とする。1 時間以上の場合は `H:MM:SS` に切り替える
-- **FR-025**: メニューが 0 件（未同期状態）の場合、空状態 UI（「iPhone アプリでメニューを作成してください」等のガイダンスメッセージ）を表示しなければならない。メニューなしでのワークアウト開始オプションも提供する
+- **FR-025**: メニューが 0 件（未同期状態）の場合、空状態 UI（「iPhone アプリでメニューを作成してください」等のガイダンスメッセージ）を表示しなければならない。「フリーワークアウト」開始オプションも提供する。フリーワークアウトモードでは種目名を都度手入力し、セット数無制限で自由に記録する（menuId = nil, menuName = nil で WorkoutSession を作成）
 - **FR-026**: `sessionId` はワークアウト開始時（`HKWorkoutSession` 生成と同時）に `UUID()` で生成し、ローカル DB、HealthKit metadata、WatchConnectivity transfer の全箇所で同一値を使用する
 - **FR-009**: 各ワークアウトの詳細（種目、セット数、時間）が確認可能でなければならない
 - **FR-010**: 合計時間などの基本統計が表示されなければならない
@@ -174,7 +174,7 @@ sessionId（UUID）で紐付けられる。
 
 ### Key Entities
 
-全エンティティは SwiftData `@Model` で定義する。iPhone と Watch で同一のモデルコードを共有フレームワーク経由で利用する。
+全エンティティは SwiftData `@Model` で定義する。iPhone と Watch で同一のモデルソースコードを Target Membership で共有する（NFR-008）。
 
 - **WorkoutSession**: ワークアウトセッションを表す。id (SwiftData PK), sessionId（UUID, HealthKit/WC 紐付け用）, startDate, endDate, menuId, menuName, totalDuration, status（`active` / `paused` / `completed` / `cancelled`）, createdAt を持つ。`id` は SwiftData フレームワークが管理する主キー、`sessionId` はクロスシステム識別子として HealthKit metadata・WatchConnectivity transfer で使用する。
 - **ExerciseResult**: セッション内の各種目の結果。exerciseId, exerciseName（非正規化）, setResults 配列, sortOrder を持つ。`exerciseId` は UUID 値による間接参照（watchOS 側に TrainingMenu/Exercise エンティティが存在しないため、`@Relationship` ではなく値コピーで参照する）。
@@ -186,7 +186,7 @@ sessionId（UUID）で紐付けられる。
 
 ### Measurable Outcomes
 
-- **SC-001**: Apple Watch でワークアウトの開始から完了までを 5 タップ以内で完了できる
+- **SC-001**: Apple Watch でメニュー選択画面からワークアウト完了までを 5 タップ以内で完了できる（計測起点: MenuSelectionView 表示時）
 - **SC-002**: ワークアウト完了後、HealthKit とローカル DB の両方にデータが保存される（成功率 100%）
 - **SC-003**: iPhone で過去のワークアウト履歴が 1 秒以内に一覧表示される
 - **SC-004**: iPhone で作成したメニューが Watch に正常に同期される

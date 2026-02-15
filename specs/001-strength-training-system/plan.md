@@ -71,7 +71,6 @@ FitnessApp/                          # iOS app target
 │   ├── WorkoutDetailView.swift
 │   └── MenuManagementView.swift
 └── Services/
-    ├── HealthKitManager.swift
     └── WorkoutDataService.swift
 
 FitnessAppWatch Watch App/           # watchOS app target
@@ -155,10 +154,10 @@ watchOS ターゲットからも同じソースファイルを Target Membership
 
 | Metric | Value |
 |--------|-------|
-| 総タスク数 | 39 |
+| 総タスク数 | 40 |
 | Phase 1: Setup | 4 tasks |
-| Phase 2: Foundational | 8 tasks |
-| Phase 3: US1 ワークアウト実行 (P1) | 11 tasks |
+| Phase 2: Foundational | 9 tasks |
+| Phase 3: US1 ワークアウト実行 (P1) | 10 tasks |
 | Phase 4: US4 データ保存・連携 (P2) | 4 tasks |
 | Phase 5: US2 履歴管理 (P2) | 4 tasks |
 | Phase 6: US3 メニュー管理 (P3) | 5 tasks |

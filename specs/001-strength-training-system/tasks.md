@@ -28,7 +28,7 @@
 - [ ] T001 Create project directory structure: `FitnessApp/Models/`, `FitnessApp/ViewModels/`, `FitnessApp/Views/`, `FitnessApp/Services/`, `FitnessAppWatch Watch App/ViewModels/`, `FitnessAppWatch Watch App/Views/`, `FitnessAppWatch Watch App/Services/`
 - [ ] T002 [P] Add HealthKit Privacy Descriptions to FitnessAppWatch-Watch-App-Info.plist: `NSHealthUpdateUsageDescription` = "This app records your strength training workouts to Apple Health." / `NSHealthShareUsageDescription` = "This app reads your heart rate during workouts to display real-time data." (FR-023)
 - [ ] T003 [P] Add `workout-processing` to `WKBackgroundModes` array in FitnessAppWatch-Watch-App-Info.plist (research.md §R5)
-- [ ] T004 Configure SwiftData modelContainer in FitnessApp/FitnessAppApp.swift (TrainingMenu, Exercise, WorkoutSession, ExerciseResult, SetResult) and FitnessAppWatch Watch App/FitnessAppWatchApp.swift (WorkoutSession, ExerciseResult, SetResult, HealthKitRetryItem)
+- [ ] T004 Configure SwiftData modelContainer in FitnessApp/FitnessAppApp.swift (TrainingMenu, Exercise, WorkoutSession, ExerciseResult, SetResult) and FitnessAppWatch Watch App/FitnessAppWatchApp.swift (WorkoutSession, ExerciseResult, SetResult, HealthKitRetryItem) ※HealthKitRetryItem は T012 (Phase 2) で作成済み
 
 ---
 
@@ -44,8 +44,9 @@
 - [ ] T008 [P] Create SetResult SwiftData model with setNumber, weight (Double, kg), reps, completedAt, and inverse relationship to ExerciseResult in FitnessApp/Models/SetResult.swift
 - [ ] T009 [P] Create TrainingMenu SwiftData model with menuId, name, createdAt, updatedAt, and @Relationship(.cascade) to Exercise in FitnessApp/Models/TrainingMenu.swift
 - [ ] T010 [P] Create Exercise SwiftData model with exerciseId, name, defaultSets, defaultWeight, defaultReps, sortOrder, and inverse relationship to TrainingMenu in FitnessApp/Models/Exercise.swift
-- [ ] T011 [P] Create Codable Transfer structs (MenuTransfer, ExerciseTransfer, WorkoutResultTransfer, ExerciseResultTransfer, SetResultTransfer) with ISO 8601 date encoding (NFR-007) in FitnessApp/Models/TransferModels.swift
-- [ ] T012 Configure Xcode Target Membership: WorkoutStatus, WorkoutSession, ExerciseResult, SetResult, TransferModels → both iOS and watchOS targets; TrainingMenu, Exercise → iOS target only
+- [ ] T011 [P] Create Codable Transfer structs (MenuTransfer, ExerciseTransfer, WorkoutResultTransfer, ExerciseResultTransfer, SetResultTransfer) with ISO 8601 date encoding (NFR-007) in FitnessApp/Models/TransferModels.swift. ExerciseResultTransfer には sortOrder フィールドを含める（種目順序の Watch→iPhone 転送保証）
+- [ ] T012 [P] Create HealthKitRetryItem SwiftData model (sessionId, workoutData: Data, attemptCount, lastAttemptDate, status: RetryStatus enum) in FitnessApp/Models/HealthKitRetryItem.swift with watchOS Target Membership only (FR-015)
+- [ ] T013 Configure Xcode Target Membership: WorkoutStatus, WorkoutSession, ExerciseResult, SetResult, TransferModels → both iOS and watchOS targets; TrainingMenu, Exercise → iOS target only; HealthKitRetryItem → watchOS target only
 
 **Checkpoint**: 基盤モデル完了 — ユーザーストーリー実装を開始可能
 
@@ -59,15 +60,14 @@
 
 ### Implementation for User Story 1
 
-- [ ] T013 [US1] Create WatchHealthKitManager with HKHealthStore authorization flow (isHealthDataAvailable check, requestAuthorization for .workoutType write), HKWorkoutSession + HKLiveWorkoutBuilder + HKLiveWorkoutDataSource lifecycle (start/pause/resume/end/cancel), HKWorkoutSessionDelegate and HKLiveWorkoutBuilderDelegate conformance in FitnessAppWatch Watch App/Services/WatchHealthKitManager.swift
-- [ ] T014 [US1] Implement HealthKit workout save flow in WatchHealthKitManager: addMetadata (com.fitnessapp.sessionId, com.fitnessapp.menuId, com.fitnessapp.menuName), finishWorkout for completed sessions, discardWorkout for cancelled sessions (FR-005, FR-006, FR-026)
-- [ ] T015 [P] [US1] Create HealthKitRetryItem SwiftData model (sessionId, workoutData: Data, attemptCount, lastAttemptDate, status: RetryStatus enum) in FitnessApp/Models/HealthKitRetryItem.swift with watchOS Target Membership only (FR-015)
+- [ ] T014 [US1] Create WatchHealthKitManager with HKHealthStore authorization flow (isHealthDataAvailable check, requestAuthorization for .workoutType write), HKWorkoutSession + HKLiveWorkoutBuilder + HKLiveWorkoutDataSource lifecycle (start/pause/resume/end/cancel), HKWorkoutSessionDelegate and HKLiveWorkoutBuilderDelegate conformance in FitnessAppWatch Watch App/Services/WatchHealthKitManager.swift
+- [ ] T015 [US1] Implement HealthKit workout save flow in WatchHealthKitManager: addMetadata (com.fitnessapp.sessionId, com.fitnessapp.menuId, com.fitnessapp.menuName), finishWorkout for completed sessions, discardWorkout for cancelled sessions (FR-005, FR-006, FR-026)
 - [ ] T016 [US1] Implement HealthKit retry queue logic in WatchHealthKitManager: exponential backoff (0s→5s→30s→5min→app launch), max 10 retries, abandoned status with user notification, foreground trigger for pending retries (FR-015, contracts/healthkit.md)
 - [ ] T017 [US1] Create WorkoutViewModel as @Observable class with workout state management (active/paused/completed/cancelled), elapsed time tracking (MM:SS / H:MM:SS per FR-024), current exercise/set tracking, heart rate from HKLiveWorkoutBuilderDelegate, weight ±2.5kg and reps ±1 adjustment (FR-004), and SwiftData incremental save on each set completion (FR-007, FR-017) in FitnessAppWatch Watch App/ViewModels/WorkoutViewModel.swift
-- [ ] T018 [US1] Create MenuSelectionView with @Query menu list display, empty state UI with guidance message "iPhone アプリでメニューを作成してください" and menu-less workout start option (FR-025), menu tap to start workout navigation in FitnessAppWatch Watch App/Views/MenuSelectionView.swift
-- [ ] T019 [US1] Create ActiveWorkoutView with upper area showing current exercise name, set number, weight (adjustable ±2.5kg), reps (adjustable ±1), elapsed time (MM:SS/H:MM:SS), heart rate (bpm); lower area with full-width "次セット" button; pause/resume toggle; cancel button with confirmation dialog "ワークアウトをキャンセルしますか？" (FR-002, FR-003, FR-004, FR-020, FR-022, FR-024) in FitnessAppWatch Watch App/Views/ActiveWorkoutView.swift
+- [ ] T018 [US1] Create MenuSelectionView with @Query menu list display, empty state UI with guidance message "iPhone アプリでメニューを作成してください" and free workout start option (FR-025), menu tap to start workout navigation in FitnessAppWatch Watch App/Views/MenuSelectionView.swift. フリーワークアウトモード: 種目名を都度手入力、セット数無制限で自由に記録
+- [ ] T019 [US1] Create ActiveWorkoutView with upper area showing current exercise name, set number, weight (adjustable ±2.5kg), reps (adjustable ±1), elapsed time (MM:SS/H:MM:SS), heart rate (bpm); lower area with full-width "次セット" button; pause/resume toggle; cancel button with confirmation dialog "ワークアウトをキャンセルしますか？" (FR-002, FR-003, FR-004, FR-020, FR-022, FR-024). フリーワークアウトモード時は種目名テキスト入力エリアを追加表示 in FitnessAppWatch Watch App/Views/ActiveWorkoutView.swift
 - [ ] T020 [US1] Create WorkoutSummaryView displaying total time, exercise count, total sets with "閉じる" button to return to menu list (FR-021) in FitnessAppWatch Watch App/Views/WorkoutSummaryView.swift
-- [ ] T021 [US1] Implement exercise auto-transition in WorkoutViewModel: advance to next exercise by sortOrder on last set completion, swipe navigation for skip/back, transition to workout completion on final exercise's final set (FR-019)
+- [ ] T021 [US1] Implement exercise auto-transition in WorkoutViewModel: advance to next exercise by sortOrder on last set completion, swipe navigation for skip/back, transition to workout completion on final exercise's final set (FR-019). フリーワークアウトモードでは手動で種目追加・完了操作を行う
 - [ ] T022 [US1] Implement crash recovery: check for active sessions on app launch, show "続行"/"破棄" dialog before menu list, resume or cancel session accordingly (FR-018) in FitnessAppWatch Watch App/FitnessAppWatchApp.swift
 - [ ] T023 [US1] Update FitnessAppWatch Watch App/FitnessAppWatchApp.swift with complete navigation flow: MenuSelectionView → ActiveWorkoutView → WorkoutSummaryView, WCSession.default.activate() on launch, modelContainer configuration
 
@@ -133,7 +133,7 @@
 
 - [ ] T037 [P] Code cleanup: remove unused existing code from WorkoutView.swift (replaced by ActiveWorkoutView), verify all FR/NFR traceability, ensure Codable conformance for all models
 - [ ] T038 [P] Error handling hardening: HealthKit unavailable fallback (hide HK UI), HealthKit permission denied guidance message, WatchConnectivity decode error logging, SwiftData save error handling across all ViewModels
-- [ ] T039 Run quickstart.md validation: execute build & run steps (iPhone scheme + Watch scheme), verify menu sync flow, verify workout recording flow, verify history display
+- [ ] T039 Run quickstart.md validation: execute build & run steps (iPhone scheme + Watch scheme), verify menu sync flow, verify workout recording flow, verify history display, verify SC-001 (メニュー選択画面からワークアウト完了まで 5 タップ以内)
 
 ---
 
@@ -165,7 +165,7 @@
 
 ### Parallel Opportunities
 
-- Phase 2 の全モデルタスク (T005-T011) は並列実行可能（異なるファイル）
+- Phase 2 の全モデルタスク (T005-T012) は並列実行可能（異なるファイル）
 - US2 (Phase 5) と US3 (Phase 6) は US4 完了後に並列実行可能
 - 各フェーズ内の [P] マークタスクは並列実行可能
 
@@ -174,12 +174,11 @@
 ## Parallel Example: User Story 1
 
 ```text
-# Phase 2 完了後、US1 のサービスとモデルを並列作成:
-Task T013: "WatchHealthKitManager 作成" (Service)
-Task T015: "HealthKitRetryItem モデル作成" (Model) [P]
+# Phase 2 完了後（HealthKitRetryItem モデルも T012 で作成済み）、US1 のサービスを作成:
+Task T014: "WatchHealthKitManager 作成" (Service)
 
-# T013 完了後、HealthKit save flow を追加:
-Task T014: "HealthKit save flow 実装"
+# T014 完了後、HealthKit save flow を追加:
+Task T015: "HealthKit save flow 実装"
 Task T016: "Retry queue 実装"
 
 # T017 完了後（ViewModel 準備完了）、Views を順次作成:
@@ -237,5 +236,5 @@ Developer B (iOS): US3 — MenuViewModel → MenuManagementView → WC sync
 - 各ユーザーストーリーは独立して完了・検証可能
 - 各タスクまたは論理的グループ完了後にコミット推奨
 - チェックポイントでストーリーの独立検証を実施
-- SwiftData モデルの Target Membership 設定は T012 で一括実施（Xcode プロジェクト設定が必要）
+- SwiftData モデルの Target Membership 設定は T013 で一括実施（Xcode プロジェクト設定が必要）
 - 既存ファイル（HomeView.swift, WatchConnectivityManager.swift, WatchSessionManager.swift, FitnessAppWatchApp.swift, FitnessAppApp.swift）は各ストーリーで順次更新

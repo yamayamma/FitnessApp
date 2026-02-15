@@ -157,12 +157,21 @@ HealthKit metadata キーは reverse-domain 形式 `com.fitnessapp.*` で統一�
 ### Retry Queue Model
 
 ```swift
-struct HealthKitRetryItem: Codable {
-    let sessionId: UUID
-    let workoutData: Data  // WorkoutResultTransfer の JSON
+@Model
+class HealthKitRetryItem {
+    var sessionId: UUID
+    var workoutData: Data  // WorkoutResultTransfer の JSON
     var attemptCount: Int
     var lastAttemptDate: Date
-    var status: RetryStatus  // pending, inProgress, succeeded, abandoned
+    var status: String  // RetryStatus の rawValue
+
+    init(sessionId: UUID, workoutData: Data, attemptCount: Int = 0, lastAttemptDate: Date = Date(), status: RetryStatus = .pending) {
+        self.sessionId = sessionId
+        self.workoutData = workoutData
+        self.attemptCount = attemptCount
+        self.lastAttemptDate = lastAttemptDate
+        self.status = status.rawValue
+    }
 }
 
 enum RetryStatus: String, Codable {

@@ -108,10 +108,11 @@ iPhone ↔ Apple Watch 間の WatchConnectivity 通信プロトコル定義。
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["exerciseId", "exerciseName", "sets"],
+        "required": ["exerciseId", "exerciseName", "sortOrder", "sets"],
         "properties": {
           "exerciseId": { "type": "string", "format": "uuid" },
           "exerciseName": { "type": "string" },
+          "sortOrder": { "type": "integer", "minimum": 0 },
           "sets": {
             "type": "array",
             "items": {

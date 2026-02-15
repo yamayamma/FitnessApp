@@ -242,6 +242,7 @@ struct WorkoutResultTransfer: Codable {
 struct ExerciseResultTransfer: Codable {
     let exerciseId: UUID
     let exerciseName: String
+    let sortOrder: Int
     let sets: [SetResultTransfer]
 }
 
