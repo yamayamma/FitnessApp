@@ -38,15 +38,15 @@
 
 **⚠️ CRITICAL**: このフェーズ完了まで、いかなるユーザーストーリーも実装開始不可
 
-- [ ] T005 [P] Create WorkoutStatus enum (active/paused/completed/cancelled, String rawValue, Codable) in FitnessApp/Models/WorkoutStatus.swift
-- [ ] T006 [P] Create WorkoutSession SwiftData model with sessionId @Attribute(.unique), status, startDate, endDate?, menuId?, menuName?, totalDuration, createdAt, and @Relationship(.cascade) to ExerciseResult in FitnessApp/Models/WorkoutSession.swift
-- [ ] T007 [P] Create ExerciseResult SwiftData model with exerciseId (UUID value copy), exerciseName, sortOrder, inverse relationship to WorkoutSession, and @Relationship(.cascade) to SetResult in FitnessApp/Models/ExerciseResult.swift
-- [ ] T008 [P] Create SetResult SwiftData model with setNumber, weight (Double, kg), reps, completedAt, and inverse relationship to ExerciseResult in FitnessApp/Models/SetResult.swift
-- [ ] T009 [P] Create TrainingMenu SwiftData model with menuId, name, createdAt, updatedAt, and @Relationship(.cascade) to Exercise in FitnessApp/Models/TrainingMenu.swift
-- [ ] T010 [P] Create Exercise SwiftData model with exerciseId, name, defaultSets, defaultWeight, defaultReps, sortOrder, and inverse relationship to TrainingMenu in FitnessApp/Models/Exercise.swift
-- [ ] T011 [P] Create Codable Transfer structs (MenuTransfer, ExerciseTransfer, WorkoutResultTransfer, ExerciseResultTransfer, SetResultTransfer) with ISO 8601 date encoding (NFR-007) in FitnessApp/Models/TransferModels.swift. ExerciseResultTransfer には sortOrder フィールドを含める（種目順序の Watch→iPhone 転送保証）
-- [ ] T012 [P] Create HealthKitRetryItem SwiftData model (sessionId, workoutData: Data, attemptCount, lastAttemptDate, status: RetryStatus enum) in FitnessApp/Models/HealthKitRetryItem.swift with watchOS Target Membership only (FR-015)
-- [ ] T013 Configure Xcode Target Membership: WorkoutStatus, WorkoutSession, ExerciseResult, SetResult, TransferModels → both iOS and watchOS targets; TrainingMenu, Exercise → iOS target only; HealthKitRetryItem → watchOS target only
+- [x] T005 [P] Create WorkoutStatus enum (active/paused/completed/cancelled, String rawValue, Codable) in FitnessApp/Models/WorkoutStatus.swift
+- [x] T006 [P] Create WorkoutSession SwiftData model with sessionId @Attribute(.unique), status, startDate, endDate?, menuId?, menuName?, totalDuration, createdAt, and @Relationship(.cascade) to ExerciseResult in FitnessApp/Models/WorkoutSession.swift
+- [x] T007 [P] Create ExerciseResult SwiftData model with exerciseId (UUID value copy), exerciseName, sortOrder, inverse relationship to WorkoutSession, and @Relationship(.cascade) to SetResult in FitnessApp/Models/ExerciseResult.swift
+- [x] T008 [P] Create SetResult SwiftData model with setNumber, weight (Double, kg), reps, completedAt, and inverse relationship to ExerciseResult in FitnessApp/Models/SetResult.swift
+- [x] T009 [P] Create TrainingMenu SwiftData model with menuId, name, createdAt, updatedAt, and @Relationship(.cascade) to Exercise in FitnessApp/Models/TrainingMenu.swift
+- [x] T010 [P] Create Exercise SwiftData model with exerciseId, name, defaultSets, defaultWeight, defaultReps, sortOrder, and inverse relationship to TrainingMenu in FitnessApp/Models/Exercise.swift
+- [x] T011 [P] Create Codable Transfer structs (MenuTransfer, ExerciseTransfer, WorkoutResultTransfer, ExerciseResultTransfer, SetResultTransfer) with ISO 8601 date encoding (NFR-007) in FitnessApp/Models/TransferModels.swift. ExerciseResultTransfer には sortOrder フィールドを含める（種目順序の Watch→iPhone 転送保証）
+- [x] T012 [P] Create HealthKitRetryItem SwiftData model (sessionId, workoutData: Data, attemptCount, lastAttemptDate, status: RetryStatus enum) in FitnessApp/Models/HealthKitRetryItem.swift with watchOS Target Membership only (FR-015)
+- [x] T013 Configure Xcode Target Membership: WorkoutStatus, WorkoutSession, ExerciseResult, SetResult, TransferModels → both iOS and watchOS targets; TrainingMenu, Exercise → iOS target only; HealthKitRetryItem → watchOS target only
 
 **Checkpoint**: 基盤モデル完了 — ユーザーストーリー実装を開始可能
 
