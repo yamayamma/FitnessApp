@@ -2,8 +2,17 @@ import WatchConnectivity
 import SwiftUI
 import Combine
 
-final class WatchSessionManager: NSObject, WCSessionDelegate, ObservableObject {
-    @Published var receivedWorkout: String = "No Workout"
+/// Watch側のWCSessionデリゲート・メニューキャッシュ管理
+@Observable
+final class WatchSessionManager: NSObject, WCSessionDelegate {
+    /// 受信したメニューのキャッシュ
+    var cachedMenus: [MenuTransfer] = []
+    
+    /// 受信したワークアウト名（レガシー互換）
+    var receivedWorkout: String = "No Workout"
+    
+    /// 接続状態
+    var isConnected: Bool = false
 
     override init() {
         super.init()
@@ -17,12 +26,24 @@ final class WatchSessionManager: NSObject, WCSessionDelegate, ObservableObject {
         session.activate()
     }
 
+    // MARK: - WCSessionDelegate
+
     func session(
         _ session: WCSession,
         activationDidCompleteWith activationState: WCSessionActivationState,
         error: Error?
-    ) {}
+    ) {
+        DispatchQueue.main.async {
+            self.isConnected = (activationState == .activated)
+        }
+        
+        // アクティベーション完了後に既存のapplicationContextを処理
+        if activationState == .activated {
+            processApplicationContext(session.receivedApplicationContext)
+        }
+    }
 
+    /// iPhoneからsendMessageで受信（レガシー互換）
     func session(
         _ session: WCSession,
         didReceiveMessage message: [String : Any]
@@ -33,4 +54,30 @@ final class WatchSessionManager: NSObject, WCSessionDelegate, ObservableObject {
             }
         }
     }
+    
+    /// iPhoneからupdateApplicationContextで受信（メニュー同期 FR-013）
+    func session(
+        _ session: WCSession,
+        didReceiveApplicationContext applicationContext: [String : Any]
+    ) {
+        processApplicationContext(applicationContext)
+    }
+    
+    // MARK: - Menu Processing
+    
+    /// applicationContextからメニューデータをデコード
+    private func processApplicationContext(_ context: [String: Any]) {
+        guard let menusData = context["menus"] as? Data else { return }
+        
+        do {
+            let menus = try JSONDecoder.fitnessApp.decode([MenuTransfer].self, from: menusData)
+            DispatchQueue.main.async {
+                self.cachedMenus = menus
+            }
+        } catch {
+            print("Failed to decode menus from applicationContext: \(error)")
+            // デコード失敗時は既存メニューを保持
+        }
+    }
 }
+
