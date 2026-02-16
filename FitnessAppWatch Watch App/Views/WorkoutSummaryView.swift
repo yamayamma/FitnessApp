@@ -11,9 +11,9 @@ import SwiftUI
 /// ワークアウト完了サマリー画面（Apple Watch）
 struct WorkoutSummaryView: View {
     let viewModel: WorkoutViewModel
-    
+
     @Environment(\.dismiss) private var dismiss
-    
+
     var body: some View {
         ScrollView {
             VStack(spacing: 12) {
@@ -21,36 +21,36 @@ struct WorkoutSummaryView: View {
                 Image(systemName: "checkmark.circle.fill")
                     .font(.largeTitle)
                     .foregroundStyle(.green)
-                
+
                 Text("ワークアウト完了")
                     .font(.headline)
-                
+
                 // サマリーデータ
                 VStack(spacing: 8) {
                     // 合計時間
-                    summaryRow(
+                    self.summaryRow(
                         icon: "timer",
                         label: "合計時間",
-                        value: viewModel.elapsedTimeString
+                        value: self.viewModel.elapsedTimeString
                     )
-                    
+
                     // 種目数
-                    summaryRow(
+                    self.summaryRow(
                         icon: "figure.strengthtraining.traditional",
                         label: "種目数",
-                        value: "\(viewModel.completedExerciseCount)"
+                        value: "\(self.viewModel.completedExerciseCount)"
                     )
-                    
+
                     // 総セット数
-                    summaryRow(
+                    self.summaryRow(
                         icon: "repeat",
                         label: "総セット数",
-                        value: "\(viewModel.completedTotalSets)"
+                        value: "\(self.viewModel.completedTotalSets)"
                     )
-                    
+
                     // メニュー名（メニューベースの場合）
                     if let menuName = viewModel.currentSession?.menuName {
-                        summaryRow(
+                        self.summaryRow(
                             icon: "list.clipboard",
                             label: "メニュー",
                             value: menuName
@@ -58,11 +58,11 @@ struct WorkoutSummaryView: View {
                     }
                 }
                 .padding(.vertical, 4)
-                
+
                 // 「閉じる」ボタン → メニュー一覧に戻る (FR-021)
                 Button("閉じる") {
                     // NavigationStackのルートに戻る
-                    dismiss()
+                    self.dismiss()
                 }
                 .tint(.blue)
             }
@@ -70,9 +70,9 @@ struct WorkoutSummaryView: View {
         }
         .navigationBarBackButtonHidden(true)
     }
-    
+
     // MARK: - Helper Views
-    
+
     private func summaryRow(icon: String, label: String, value: String) -> some View {
         HStack {
             Label(label, systemImage: icon)

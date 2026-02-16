@@ -10,8 +10,7 @@ import Foundation
 import SwiftData
 
 /// ワークアウトデータの受信・永続化サービス（iPhone側）
-final class WorkoutDataService {
-    
+enum WorkoutDataService {
     /// Watch からの WorkoutResultTransfer を受信してSwiftDataに保存
     /// - Parameters:
     ///   - transferData: JSONエンコードされたWorkoutResultTransfer Data
@@ -27,13 +26,13 @@ final class WorkoutDataService {
                 WorkoutResultTransfer.self,
                 from: transferData
             )
-            return persist(transfer: transfer, modelContext: modelContext)
+            return self.persist(transfer: transfer, modelContext: modelContext)
         } catch {
             print("Failed to decode workout result: \(error)")
             return false
         }
     }
-    
+
     /// WorkoutResultTransfer をSwiftDataに永続化
     /// - Parameters:
     ///   - transfer: デコード済みのWorkoutResultTransfer
@@ -50,13 +49,14 @@ final class WorkoutDataService {
                 session.sessionId == sessionId
             }
         )
-        
+
         if let existingSessions = try? modelContext.fetch(descriptor),
-           !existingSessions.isEmpty {
+           !existingSessions.isEmpty
+        {
             print("Duplicate sessionId detected, skipping: \(sessionId)")
             return false
         }
-        
+
         // WorkoutSession作成
         let session = WorkoutSession(
             sessionId: transfer.sessionId,
@@ -69,7 +69,7 @@ final class WorkoutDataService {
             createdAt: Date()
         )
         modelContext.insert(session)
-        
+
         // ExerciseResult + SetResult 作成
         for exerciseTransfer in transfer.exercises {
             let exerciseResult = ExerciseResult(
@@ -80,7 +80,7 @@ final class WorkoutDataService {
             exerciseResult.session = session
             session.exerciseResults.append(exerciseResult)
             modelContext.insert(exerciseResult)
-            
+
             for setTransfer in exerciseTransfer.sets {
                 let setResult = SetResult(
                     setNumber: setTransfer.setNumber,
@@ -93,7 +93,7 @@ final class WorkoutDataService {
                 modelContext.insert(setResult)
             }
         }
-        
+
         do {
             try modelContext.save()
             print("Workout result persisted successfully: \(sessionId)")

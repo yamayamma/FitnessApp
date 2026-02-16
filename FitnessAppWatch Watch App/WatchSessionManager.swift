@@ -1,22 +1,22 @@
-import WatchConnectivity
-import SwiftUI
 import Combine
+import SwiftUI
+import WatchConnectivity
 
 /// Watch側のWCSessionデリゲート・メニューキャッシュ管理
 @Observable
 final class WatchSessionManager: NSObject, WCSessionDelegate {
     /// 受信したメニューのキャッシュ
     var cachedMenus: [MenuTransfer] = []
-    
+
     /// 受信したワークアウト名（レガシー互換）
-    var receivedWorkout: String = "No Workout"
-    
+    var receivedWorkout = "No Workout"
+
     /// 接続状態
-    var isConnected: Bool = false
+    var isConnected = false
 
     override init() {
         super.init()
-        activate()
+        self.activate()
     }
 
     private func activate() {
@@ -36,17 +36,17 @@ final class WatchSessionManager: NSObject, WCSessionDelegate {
         DispatchQueue.main.async {
             self.isConnected = (activationState == .activated)
         }
-        
+
         // アクティベーション完了後に既存のapplicationContextを処理
         if activationState == .activated {
-            processApplicationContext(session.receivedApplicationContext)
+            self.processApplicationContext(session.receivedApplicationContext)
         }
     }
 
     /// iPhoneからsendMessageで受信（レガシー互換）
     func session(
         _ session: WCSession,
-        didReceiveMessage message: [String : Any]
+        didReceiveMessage message: [String: Any]
     ) {
         DispatchQueue.main.async {
             if let workout = message["workout"] as? String {
@@ -54,21 +54,21 @@ final class WatchSessionManager: NSObject, WCSessionDelegate {
             }
         }
     }
-    
+
     /// iPhoneからupdateApplicationContextで受信（メニュー同期 FR-013）
     func session(
         _ session: WCSession,
-        didReceiveApplicationContext applicationContext: [String : Any]
+        didReceiveApplicationContext applicationContext: [String: Any]
     ) {
-        processApplicationContext(applicationContext)
+        self.processApplicationContext(applicationContext)
     }
-    
+
     // MARK: - Menu Processing
-    
+
     /// applicationContextからメニューデータをデコード
     private func processApplicationContext(_ context: [String: Any]) {
         guard let menusData = context["menus"] as? Data else { return }
-        
+
         do {
             let menus = try JSONDecoder.fitnessApp.decode([MenuTransfer].self, from: menusData)
             DispatchQueue.main.async {
@@ -79,9 +79,9 @@ final class WatchSessionManager: NSObject, WCSessionDelegate {
             // デコード失敗時は既存メニューを保持
         }
     }
-    
+
     // MARK: - Workout Result Transfer (T024)
-    
+
     /// ワークアウト完了結果をiPhoneへ転送（FR-014, FR-016）
     /// completedセッションのみ送信。cancelledは送信しない。
     func sendWorkoutResult(session: WorkoutSession) {
@@ -89,12 +89,12 @@ final class WatchSessionManager: NSObject, WCSessionDelegate {
             print("Skipping transfer: session status is \(session.statusRawValue)")
             return
         }
-        
+
         guard let endDate = session.endDate else {
             print("Skipping transfer: session has no endDate")
             return
         }
-        
+
         // WorkoutResultTransferに変換
         let exerciseTransfers = session.exerciseResults
             .sorted { $0.sortOrder < $1.sortOrder }
@@ -115,7 +115,7 @@ final class WatchSessionManager: NSObject, WCSessionDelegate {
                         }
                 )
             }
-        
+
         let resultTransfer = WorkoutResultTransfer(
             sessionId: session.sessionId,
             startDate: session.startDate,
@@ -126,14 +126,14 @@ final class WatchSessionManager: NSObject, WCSessionDelegate {
             status: session.statusRawValue,
             exercises: exerciseTransfers
         )
-        
+
         // JSONエンコードしてtransferUserInfoで送信
         do {
             let data = try JSONEncoder.fitnessApp.encode(resultTransfer)
             let userInfo: [String: Any] = [
                 "type": "workoutResult",
                 "sessionId": session.sessionId.uuidString,
-                "data": data
+                "data": data,
             ]
             WCSession.default.transferUserInfo(userInfo)
             print("Workout result transferred: \(session.sessionId)")
@@ -142,4 +142,3 @@ final class WatchSessionManager: NSObject, WCSessionDelegate {
         }
     }
 }
-

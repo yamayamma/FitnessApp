@@ -6,157 +6,156 @@
 //  T017, T021: Workout state management, exercise auto-transition
 //
 
+import Combine
 import Foundation
 import SwiftData
-import Combine
 
 /// ワークアウト実行のViewModel（Apple Watch）
 @Observable
 final class WorkoutViewModel {
-    
     // MARK: - Workout State
-    
+
     /// 現在のワークアウト状態
-    var workoutStatus: WorkoutStatus = .active
-    
+    var workoutStatus = WorkoutStatus.active
+
     /// 経過時間（秒）
     var elapsedTime: TimeInterval = 0
-    
+
     /// 経過時間の表示文字列 (MM:SS or H:MM:SS per FR-024)
     var elapsedTimeString: String {
         let totalSeconds = Int(elapsedTime)
         let hours = totalSeconds / 3600
         let minutes = (totalSeconds % 3600) / 60
         let seconds = totalSeconds % 60
-        
+
         if hours > 0 {
             return String(format: "%d:%02d:%02d", hours, minutes, seconds)
         } else {
             return String(format: "%02d:%02d", minutes, seconds)
         }
     }
-    
+
     /// 心拍数 (bpm)
     var heartRate: Double = 0
-    
+
     /// 心拍数の表示文字列
     var heartRateString: String {
-        heartRate > 0 ? "\(Int(heartRate)) bpm" : "-- bpm"
+        self.heartRate > 0 ? "\(Int(self.heartRate)) bpm" : "-- bpm"
     }
-    
+
     // MARK: - Exercise/Set Tracking
-    
+
     /// 現在のセッション
     var currentSession: WorkoutSession?
-    
+
     /// 種目リスト（メニューまたはフリーワークアウトから）
     var exercises: [ExerciseInfo] = []
-    
+
     /// 現在の種目インデックス
-    var currentExerciseIndex: Int = 0
-    
+    var currentExerciseIndex = 0
+
     /// 現在のセット番号（1始まり）
-    var currentSetNumber: Int = 1
-    
+    var currentSetNumber = 1
+
     /// 現在の重量 (kg)
-    var currentWeight: Double = 20.0
-    
+    var currentWeight = 20.0
+
     /// 現在のレップ数
-    var currentReps: Int = 10
-    
+    var currentReps = 10
+
     /// フリーワークアウトモードか
-    var isFreeWorkout: Bool = false
-    
+    var isFreeWorkout = false
+
     /// フリーワークアウトの種目名入力
-    var freeExerciseName: String = ""
-    
+    var freeExerciseName = ""
+
     /// キャンセル確認ダイアログの表示
-    var showCancelConfirmation: Bool = false
-    
+    var showCancelConfirmation = false
+
     /// ワークアウト完了フラグ
-    var isWorkoutCompleted: Bool = false
-    
+    var isWorkoutCompleted = false
+
     /// HealthKitマネージャー
     var healthKitManager: WatchHealthKitManager
-    
+
     /// WatchSessionManager参照（ワークアウト結果転送用）
     var sessionManager: WatchSessionManager?
-    
+
     // MARK: - Current Exercise Info
-    
+
     /// 現在の種目情報
     var currentExercise: ExerciseInfo? {
-        guard currentExerciseIndex < exercises.count else { return nil }
-        return exercises[currentExerciseIndex]
+        guard self.currentExerciseIndex < self.exercises.count else { return nil }
+        return self.exercises[self.currentExerciseIndex]
     }
-    
+
     /// 現在の種目名
     var currentExerciseName: String {
-        if isFreeWorkout && currentExercise == nil {
-            return freeExerciseName.isEmpty ? "種目を入力" : freeExerciseName
+        if self.isFreeWorkout, self.currentExercise == nil {
+            return self.freeExerciseName.isEmpty ? "種目を入力" : self.freeExerciseName
         }
-        return currentExercise?.name ?? "種目なし"
+        return self.currentExercise?.name ?? "種目なし"
     }
-    
+
     /// 総セット数
     var totalSets: Int {
-        currentExercise?.defaultSets ?? 0
+        self.currentExercise?.defaultSets ?? 0
     }
-    
+
     /// 種目の総数
     var totalExercises: Int {
-        exercises.count
+        self.exercises.count
     }
-    
+
     // MARK: - Summary Data
-    
+
     /// 完了した種目数
     var completedExerciseCount: Int {
-        currentSession?.exerciseResults.count ?? 0
+        self.currentSession?.exerciseResults.count ?? 0
     }
-    
+
     /// 完了した総セット数
     var completedTotalSets: Int {
-        currentSession?.exerciseResults.reduce(0) { $0 + $1.setResults.count } ?? 0
+        self.currentSession?.exerciseResults.reduce(0) { $0 + $1.setResults.count } ?? 0
     }
-    
+
     // MARK: - Private
-    
+
     private var timer: Timer?
     private var modelContext: ModelContext?
-    
+
     // MARK: - Initialization
-    
+
     init(healthKitManager: WatchHealthKitManager = WatchHealthKitManager()) {
         self.healthKitManager = healthKitManager
     }
-    
+
     // MARK: - Workout Lifecycle
-    
+
     /// メニューからワークアウトを開始
     func startWorkout(
         menu: MenuTransfer?,
         modelContext: ModelContext
     ) async {
         self.modelContext = modelContext
-        
+
         let sessionId = UUID()
-        
+
         // セッション作成
         let session = WorkoutSession(
             sessionId: sessionId,
             startDate: Date(),
             menuId: menu?.menuId,
-            menuName: menu?.name,
-            status: .active
+            menuName: menu?.name
         )
+        session.status = .active
         modelContext.insert(session)
         self.currentSession = session
-        
+
         // メニューから種目情報を設定
-        if let menu = menu {
-            isFreeWorkout = false
-            exercises = menu.exercises.sorted(by: { $0.sortOrder < $1.sortOrder }).map { exercise in
+        if let menu {
+            self.isFreeWorkout = false
+            self.exercises = menu.exercises.sorted(by: { $0.sortOrder < $1.sortOrder }).map { exercise in
                 ExerciseInfo(
                     exerciseId: exercise.exerciseId,
                     name: exercise.name,
@@ -166,47 +165,47 @@ final class WorkoutViewModel {
                     sortOrder: exercise.sortOrder
                 )
             }
-            
+
             // 最初の種目のデフォルト値を設定
             if let firstExercise = exercises.first {
-                currentWeight = firstExercise.defaultWeight
-                currentReps = firstExercise.defaultReps
+                self.currentWeight = firstExercise.defaultWeight
+                self.currentReps = firstExercise.defaultReps
             }
         } else {
             // フリーワークアウトモード
-            isFreeWorkout = true
-            exercises = []
+            self.isFreeWorkout = true
+            self.exercises = []
         }
-        
-        currentExerciseIndex = 0
-        currentSetNumber = 1
-        workoutStatus = .active
-        elapsedTime = 0
-        
+
+        self.currentExerciseIndex = 0
+        self.currentSetNumber = 1
+        self.workoutStatus = .active
+        self.elapsedTime = 0
+
         // ExerciseResultを作成（メニューベースの場合）
-        if !isFreeWorkout {
-            createExerciseResults(for: session, in: modelContext)
+        if !self.isFreeWorkout {
+            self.createExerciseResults(for: session, in: modelContext)
         }
-        
+
         // タイマー開始
-        startTimer()
-        
+        self.startTimer()
+
         // HealthKit開始
-        if healthKitManager.isHealthKitAvailable {
+        if self.healthKitManager.isHealthKitAvailable {
             do {
-                try await healthKitManager.startWorkout()
+                try await self.healthKitManager.startWorkout()
             } catch {
                 // HealthKit使用不可でもローカルDBには記録続行
                 print("HealthKit start failed: \(error)")
             }
         }
-        
+
         try? modelContext.save()
     }
-    
+
     /// 種目結果をセッションに作成
     private func createExerciseResults(for session: WorkoutSession, in context: ModelContext) {
-        for exercise in exercises {
+        for exercise in self.exercises {
             let result = ExerciseResult(
                 exerciseId: exercise.exerciseId,
                 exerciseName: exercise.name,
@@ -217,11 +216,11 @@ final class WorkoutViewModel {
             context.insert(result)
         }
     }
-    
+
     /// フリーワークアウトで種目を追加
     func addFreeExercise(name: String) {
         guard let session = currentSession, let context = modelContext else { return }
-        
+
         let exerciseInfo = ExerciseInfo(
             exerciseId: UUID(),
             name: name,
@@ -230,10 +229,10 @@ final class WorkoutViewModel {
             defaultReps: currentReps,
             sortOrder: exercises.count
         )
-        exercises.append(exerciseInfo)
-        currentExerciseIndex = exercises.count - 1
-        currentSetNumber = 1
-        
+        self.exercises.append(exerciseInfo)
+        self.currentExerciseIndex = self.exercises.count - 1
+        self.currentSetNumber = 1
+
         let result = ExerciseResult(
             exerciseId: exerciseInfo.exerciseId,
             exerciseName: name,
@@ -244,33 +243,33 @@ final class WorkoutViewModel {
         context.insert(result)
         try? context.save()
     }
-    
+
     // MARK: - Set Operations
-    
+
     /// 重量を調整 (±2.5kg per FR-004)
     func adjustWeight(by amount: Double) {
-        currentWeight = max(0, currentWeight + amount)
+        self.currentWeight = max(0, self.currentWeight + amount)
     }
-    
+
     /// レップ数を調整 (±1 per FR-004)
     func adjustReps(by amount: Int) {
-        currentReps = max(0, currentReps + amount)
+        self.currentReps = max(0, self.currentReps + amount)
     }
-    
+
     /// セットを完了して次に進む (FR-007, FR-017)
     func completeSet() {
         guard let session = currentSession, let context = modelContext else { return }
-        
+
         // 現在の種目のExerciseResultを取得
         let exerciseResult: ExerciseResult
-        if currentExerciseIndex < session.exerciseResults.count {
+        if self.currentExerciseIndex < session.exerciseResults.count {
             // sortOrderでソートして取得
             let sortedResults = session.exerciseResults.sorted { $0.sortOrder < $1.sortOrder }
-            exerciseResult = sortedResults[currentExerciseIndex]
+            exerciseResult = sortedResults[self.currentExerciseIndex]
         } else {
             return
         }
-        
+
         // SetResultを作成してインクリメンタル保存
         let setResult = SetResult(
             setNumber: currentSetNumber,
@@ -281,166 +280,164 @@ final class WorkoutViewModel {
         setResult.exerciseResult = exerciseResult
         exerciseResult.setResults.append(setResult)
         context.insert(setResult)
-        
+
         // 即時保存 (FR-017)
         try? context.save()
-        
+
         // 次のセットまたは種目遷移 (T021 - FR-019)
-        advanceToNext()
+        self.advanceToNext()
     }
-    
+
     /// 次のセットまたは種目に進む (T021)
     private func advanceToNext() {
         let isLastSet: Bool
-        
-        if isFreeWorkout {
+
+        if self.isFreeWorkout {
             // フリーワークアウトモード: セット数無制限
-            currentSetNumber += 1
+            self.currentSetNumber += 1
             return
         }
-        
+
         if let exercise = currentExercise {
-            isLastSet = currentSetNumber >= exercise.defaultSets
+            isLastSet = self.currentSetNumber >= exercise.defaultSets
         } else {
             isLastSet = true
         }
-        
+
         if isLastSet {
             // 最終セット完了
-            if currentExerciseIndex >= exercises.count - 1 {
+            if self.currentExerciseIndex >= self.exercises.count - 1 {
                 // 最終種目の最終セット → ワークアウト完了
                 return // ユーザーが明示的に完了を選択
             } else {
                 // 次種目に自動遷移 (FR-019)
-                moveToNextExercise()
+                self.moveToNextExercise()
             }
         } else {
             // 次セットへ
-            currentSetNumber += 1
+            self.currentSetNumber += 1
         }
     }
-    
+
     /// 次の種目に移動
     func moveToNextExercise() {
-        guard currentExerciseIndex < exercises.count - 1 else { return }
-        currentExerciseIndex += 1
-        currentSetNumber = 1
-        
+        guard self.currentExerciseIndex < self.exercises.count - 1 else { return }
+        self.currentExerciseIndex += 1
+        self.currentSetNumber = 1
+
         // 次の種目のデフォルト値を設定
         if let exercise = currentExercise {
-            currentWeight = exercise.defaultWeight
-            currentReps = exercise.defaultReps
+            self.currentWeight = exercise.defaultWeight
+            self.currentReps = exercise.defaultReps
         }
     }
-    
+
     /// 前の種目に移動
     func moveToPreviousExercise() {
-        guard currentExerciseIndex > 0 else { return }
-        currentExerciseIndex -= 1
-        currentSetNumber = 1
-        
+        guard self.currentExerciseIndex > 0 else { return }
+        self.currentExerciseIndex -= 1
+        self.currentSetNumber = 1
+
         if let exercise = currentExercise {
-            currentWeight = exercise.defaultWeight
-            currentReps = exercise.defaultReps
+            self.currentWeight = exercise.defaultWeight
+            self.currentReps = exercise.defaultReps
         }
     }
-    
+
     // MARK: - Pause/Resume
-    
+
     /// 一時停止
     func pauseWorkout() {
-        workoutStatus = .paused
-        stopTimer()
-        healthKitManager.pauseWorkout()
-        
-        currentSession?.status = .paused
-        try? modelContext?.save()
+        self.workoutStatus = .paused
+        self.stopTimer()
+        self.healthKitManager.pauseWorkout()
+
+        self.currentSession?.status = .paused
+        try? self.modelContext?.save()
     }
-    
+
     /// 再開
     func resumeWorkout() {
-        workoutStatus = .active
-        startTimer()
-        healthKitManager.resumeWorkout()
-        
-        currentSession?.status = .active
-        try? modelContext?.save()
+        self.workoutStatus = .active
+        self.startTimer()
+        self.healthKitManager.resumeWorkout()
+
+        self.currentSession?.status = .active
+        try? self.modelContext?.save()
     }
-    
+
     // MARK: - Complete/Cancel
-    
+
     /// ワークアウトを完了
     func completeWorkout() async {
         guard let session = currentSession, let context = modelContext else { return }
-        
-        stopTimer()
-        
+
+        self.stopTimer()
+
         session.endDate = Date()
-        session.totalDuration = elapsedTime
+        session.totalDuration = self.elapsedTime
         session.status = .completed
         try? context.save()
-        
+
         // HealthKitに保存 (T015)
-        if healthKitManager.isHealthKitAvailable && healthKitManager.isAuthorized {
-            await healthKitManager.saveWorkoutWithRetry(
+        if self.healthKitManager.isHealthKitAvailable, self.healthKitManager.isAuthorized {
+            await self.healthKitManager.saveWorkoutWithRetry(
                 sessionId: session.sessionId,
                 menuId: session.menuId,
                 menuName: session.menuName,
                 modelContext: context
             )
         }
-        
+
         // Watch → iPhone 結果転送 (T024, FR-014)
-        sessionManager?.sendWorkoutResult(session: session)
-        
-        workoutStatus = .completed
-        isWorkoutCompleted = true
+        self.sessionManager?.sendWorkoutResult(session: session)
+
+        self.workoutStatus = .completed
+        self.isWorkoutCompleted = true
     }
-    
+
     /// ワークアウトをキャンセル (FR-020)
     func cancelWorkout() async {
         guard let session = currentSession, let context = modelContext else { return }
-        
-        stopTimer()
-        
+
+        self.stopTimer()
+
         session.endDate = Date()
-        session.totalDuration = elapsedTime
+        session.totalDuration = self.elapsedTime
         session.status = .cancelled
         try? context.save()
-        
+
         // HealthKitからは破棄
-        if healthKitManager.isWorkoutActive {
-            try? await healthKitManager.cancelWorkout()
+        if self.healthKitManager.isWorkoutActive {
+            try? await self.healthKitManager.cancelWorkout()
         }
-        
-        workoutStatus = .cancelled
+
+        self.workoutStatus = .cancelled
     }
-    
+
     // MARK: - Timer
-    
+
     private func startTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
-            guard let self = self else { return }
+        self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            guard let self else { return }
             self.elapsedTime += 1
-            
+
             // HealthKitから心拍数を更新
             self.heartRate = self.healthKitManager.heartRate
         }
     }
-    
+
     private func stopTimer() {
-        timer?.invalidate()
-        timer = nil
+        self.timer?.invalidate()
+        self.timer = nil
     }
-    
+
     // MARK: - Cleanup
-    
+
     func cleanup() {
-        stopTimer()
-        workoutSession = nil
+        self.stopTimer()
+        self.currentSession = nil
     }
-    
-    private var workoutSession_ref: WorkoutSession? = nil
 }
 
 // MARK: - ExerciseInfo (Menu Transfer → ViewModel用構造体)
