@@ -11,23 +11,23 @@ import SwiftUI
 /// ワークアウト詳細画面（iPhone）
 struct WorkoutDetailView: View {
     let session: WorkoutSession
-    
+
     var body: some View {
         List {
             // セッション概要
             Section("概要") {
-                DetailRow(label: "メニュー", value: session.menuName ?? "フリーワークアウト")
-                DetailRow(label: "日時", value: HistoryViewModel.formatDate(session.startDate))
-                DetailRow(label: "合計時間", value: HistoryViewModel.formatDuration(session.totalDuration))
-                DetailRow(label: "種目数", value: "\(session.exerciseResults.count)")
+                DetailRow(label: "メニュー", value: self.session.menuName ?? "フリーワークアウト")
+                DetailRow(label: "日時", value: HistoryViewModel.formatDate(self.session.startDate))
+                DetailRow(label: "合計時間", value: HistoryViewModel.formatDuration(self.session.totalDuration))
+                DetailRow(label: "種目数", value: "\(self.session.exerciseResults.count)")
                 DetailRow(
                     label: "総セット数",
-                    value: "\(session.exerciseResults.reduce(0) { $0 + $1.setResults.count })"
+                    value: "\(self.session.exerciseResults.reduce(0) { $0 + $1.setResults.count })"
                 )
             }
-            
+
             // 種目ごとの詳細
-            let sortedResults = session.exerciseResults.sorted { $0.sortOrder < $1.sortOrder }
+            let sortedResults = self.session.exerciseResults.sorted { $0.sortOrder < $1.sortOrder }
             ForEach(sortedResults, id: \.id) { exerciseResult in
                 Section(exerciseResult.exerciseName) {
                     let sortedSets = exerciseResult.setResults.sorted { $0.setNumber < $1.setNumber }
@@ -61,13 +61,13 @@ struct WorkoutDetailView: View {
 struct DetailRow: View {
     let label: String
     let value: String
-    
+
     var body: some View {
         HStack {
-            Text(label)
+            Text(self.label)
                 .foregroundStyle(.secondary)
             Spacer()
-            Text(value)
+            Text(self.value)
                 .fontWeight(.medium)
         }
     }

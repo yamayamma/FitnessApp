@@ -16,25 +16,25 @@ import SwiftData
 final class HealthKitRetryItem {
     /// 対象のセッションID
     var sessionId: UUID
-    
+
     /// WorkoutResultTransferのJSON Data
     var workoutData: Data
-    
+
     /// リトライ試行回数
     var attemptCount: Int
-    
+
     /// 最終試行日時
     var lastAttemptDate: Date
-    
+
     /// リトライステータス（rawValueで保存）
     var statusRawValue: String
-    
+
     /// リトライステータスの computed property
     var retryStatus: RetryStatus {
-        get { RetryStatus(rawValue: statusRawValue) ?? .pending }
-        set { statusRawValue = newValue.rawValue }
+        get { RetryStatus(rawValue: self.statusRawValue) ?? .pending }
+        set { self.statusRawValue = newValue.rawValue }
     }
-    
+
     init(
         sessionId: UUID,
         workoutData: Data,
@@ -52,8 +52,8 @@ final class HealthKitRetryItem {
 
 /// リトライステータス
 enum RetryStatus: String, Codable {
-    case pending      // 未処理
-    case inProgress   // 処理中
-    case succeeded    // 成功
-    case abandoned    // 最大リトライ超過（>= 10回）
+    case pending // 未処理
+    case inProgress // 処理中
+    case succeeded // 成功
+    case abandoned // 最大リトライ超過（>= 10回）
 }

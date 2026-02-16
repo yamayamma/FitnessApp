@@ -6,8 +6,8 @@
 //  T033: Menu management UI with CRUD for menus and exercises (FR-011, FR-012)
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 /// メニュー管理画面（iPhone）
 struct MenuManagementView: View {
@@ -15,10 +15,10 @@ struct MenuManagementView: View {
     @State private var viewModel = MenuViewModel()
     @State private var showNewMenuSheet = false
     @State private var newMenuName = ""
-    
+
     var body: some View {
         List {
-            if viewModel.menus.isEmpty {
+            if self.viewModel.menus.isEmpty {
                 // 空状態
                 Section {
                     VStack(spacing: 12) {
@@ -36,9 +36,9 @@ struct MenuManagementView: View {
                     .padding(.vertical, 32)
                 }
             } else {
-                ForEach(viewModel.menus, id: \.id) { menu in
+                ForEach(self.viewModel.menus, id: \.id) { menu in
                     NavigationLink {
-                        MenuDetailView(menu: menu, viewModel: viewModel)
+                        MenuDetailView(menu: menu, viewModel: self.viewModel)
                     } label: {
                         VStack(alignment: .leading, spacing: 4) {
                             Text(menu.name)
@@ -51,7 +51,7 @@ struct MenuManagementView: View {
                 }
                 .onDelete { indexSet in
                     for index in indexSet {
-                        viewModel.deleteMenu(viewModel.menus[index], modelContext: modelContext)
+                        self.viewModel.deleteMenu(self.viewModel.menus[index], modelContext: self.modelContext)
                     }
                 }
             }
@@ -60,41 +60,41 @@ struct MenuManagementView: View {
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button {
-                    showNewMenuSheet = true
+                    self.showNewMenuSheet = true
                 } label: {
                     Image(systemName: "plus")
                 }
             }
         }
-        .sheet(isPresented: $showNewMenuSheet) {
+        .sheet(isPresented: self.$showNewMenuSheet) {
             NavigationStack {
                 Form {
-                    TextField("メニュー名", text: $newMenuName)
+                    TextField("メニュー名", text: self.$newMenuName)
                 }
                 .navigationTitle("新しいメニュー")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
                         Button("キャンセル") {
-                            newMenuName = ""
-                            showNewMenuSheet = false
+                            self.newMenuName = ""
+                            self.showNewMenuSheet = false
                         }
                     }
                     ToolbarItem(placement: .confirmationAction) {
                         Button("作成") {
-                            guard !newMenuName.trimmingCharacters(in: .whitespaces).isEmpty else { return }
-                            viewModel.createMenu(name: newMenuName, modelContext: modelContext)
-                            newMenuName = ""
-                            showNewMenuSheet = false
+                            guard !self.newMenuName.trimmingCharacters(in: .whitespaces).isEmpty else { return }
+                            self.viewModel.createMenu(name: self.newMenuName, modelContext: self.modelContext)
+                            self.newMenuName = ""
+                            self.showNewMenuSheet = false
                         }
-                        .disabled(newMenuName.trimmingCharacters(in: .whitespaces).isEmpty)
+                        .disabled(self.newMenuName.trimmingCharacters(in: .whitespaces).isEmpty)
                     }
                 }
             }
             .presentationDetents([.medium])
         }
         .onAppear {
-            viewModel.loadMenus(modelContext: modelContext)
+            self.viewModel.loadMenus(modelContext: self.modelContext)
         }
     }
 }
@@ -106,34 +106,34 @@ struct MenuDetailView: View {
     let menu: TrainingMenu
     @Bindable var viewModel: MenuViewModel
     @Environment(\.modelContext) private var modelContext
-    
+
     @State private var showAddExercise = false
     @State private var newExerciseName = ""
     @State private var newDefaultSets = 3
     @State private var newDefaultWeight = 20.0
     @State private var newDefaultReps = 10
-    
+
     var sortedExercises: [Exercise] {
-        menu.exercises.sorted { $0.sortOrder < $1.sortOrder }
+        self.menu.exercises.sorted { $0.sortOrder < $1.sortOrder }
     }
-    
+
     var body: some View {
         List {
             // メニュー情報
             Section("メニュー情報") {
-                Text(menu.name)
+                Text(self.menu.name)
                     .font(.headline)
             }
-            
+
             // 種目一覧
             Section("種目") {
-                if sortedExercises.isEmpty {
+                if self.sortedExercises.isEmpty {
                     Text("種目がありません")
                         .foregroundStyle(.secondary)
                 } else {
-                    ForEach(sortedExercises, id: \.id) { exercise in
+                    ForEach(self.sortedExercises, id: \.id) { exercise in
                         NavigationLink {
-                            ExerciseEditView(exercise: exercise, viewModel: viewModel)
+                            ExerciseEditView(exercise: exercise, viewModel: self.viewModel)
                         } label: {
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(exercise.name)
@@ -150,21 +150,30 @@ struct MenuDetailView: View {
                     }
                     .onDelete { indexSet in
                         for index in indexSet {
-                            viewModel.removeExercise(sortedExercises[index], from: menu, modelContext: modelContext)
+                            self.viewModel.removeExercise(
+                                self.sortedExercises[index],
+                                from: self.menu,
+                                modelContext: self.modelContext
+                            )
                         }
                     }
                     .onMove { from, to in
-                        viewModel.reorderExercises(in: menu, from: from, to: to, modelContext: modelContext)
+                        self.viewModel.reorderExercises(
+                            in: self.menu,
+                            from: from,
+                            to: to,
+                            modelContext: self.modelContext
+                        )
                     }
                 }
             }
         }
-        .navigationTitle(menu.name)
+        .navigationTitle(self.menu.name)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button {
-                    showAddExercise = true
+                    self.showAddExercise = true
                 } label: {
                     Image(systemName: "plus")
                 }
@@ -173,60 +182,60 @@ struct MenuDetailView: View {
                 EditButton()
             }
         }
-        .sheet(isPresented: $showAddExercise) {
+        .sheet(isPresented: self.$showAddExercise) {
             NavigationStack {
                 Form {
-                    TextField("種目名", text: $newExerciseName)
-                    
-                    Stepper("セット数: \(newDefaultSets)", value: $newDefaultSets, in: 1...20)
-                    
+                    TextField("種目名", text: self.$newExerciseName)
+
+                    Stepper("セット数: \(self.newDefaultSets)", value: self.$newDefaultSets, in: 1...20)
+
                     HStack {
                         Text("重量 (kg)")
                         Spacer()
-                        TextField("重量", value: $newDefaultWeight, format: .number)
+                        TextField("重量", value: self.$newDefaultWeight, format: .number)
                             .keyboardType(.decimalPad)
                             .multilineTextAlignment(.trailing)
                             .frame(width: 80)
                     }
-                    
-                    Stepper("レップ数: \(newDefaultReps)", value: $newDefaultReps, in: 1...100)
+
+                    Stepper("レップ数: \(self.newDefaultReps)", value: self.$newDefaultReps, in: 1...100)
                 }
                 .navigationTitle("種目を追加")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
                         Button("キャンセル") {
-                            resetExerciseForm()
-                            showAddExercise = false
+                            self.resetExerciseForm()
+                            self.showAddExercise = false
                         }
                     }
                     ToolbarItem(placement: .confirmationAction) {
                         Button("追加") {
-                            guard !newExerciseName.trimmingCharacters(in: .whitespaces).isEmpty else { return }
-                            viewModel.addExercise(
-                                to: menu,
-                                name: newExerciseName,
-                                defaultSets: newDefaultSets,
-                                defaultWeight: newDefaultWeight,
-                                defaultReps: newDefaultReps,
-                                modelContext: modelContext
+                            guard !self.newExerciseName.trimmingCharacters(in: .whitespaces).isEmpty else { return }
+                            self.viewModel.addExercise(
+                                to: self.menu,
+                                name: self.newExerciseName,
+                                defaultSets: self.newDefaultSets,
+                                defaultWeight: self.newDefaultWeight,
+                                defaultReps: self.newDefaultReps,
+                                modelContext: self.modelContext
                             )
-                            resetExerciseForm()
-                            showAddExercise = false
+                            self.resetExerciseForm()
+                            self.showAddExercise = false
                         }
-                        .disabled(newExerciseName.trimmingCharacters(in: .whitespaces).isEmpty)
+                        .disabled(self.newExerciseName.trimmingCharacters(in: .whitespaces).isEmpty)
                     }
                 }
             }
             .presentationDetents([.medium])
         }
     }
-    
+
     private func resetExerciseForm() {
-        newExerciseName = ""
-        newDefaultSets = 3
-        newDefaultWeight = 20.0
-        newDefaultReps = 10
+        self.newExerciseName = ""
+        self.newDefaultSets = 3
+        self.newDefaultWeight = 20.0
+        self.newDefaultReps = 10
     }
 }
 
@@ -238,51 +247,51 @@ struct ExerciseEditView: View {
     @Bindable var viewModel: MenuViewModel
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
-    
-    @State private var name: String = ""
-    @State private var defaultSets: Int = 3
-    @State private var defaultWeight: Double = 20.0
-    @State private var defaultReps: Int = 10
-    
+
+    @State private var name = ""
+    @State private var defaultSets = 3
+    @State private var defaultWeight = 20.0
+    @State private var defaultReps = 10
+
     var body: some View {
         Form {
-            TextField("種目名", text: $name)
-            
-            Stepper("セット数: \(defaultSets)", value: $defaultSets, in: 1...20)
-            
+            TextField("種目名", text: self.$name)
+
+            Stepper("セット数: \(self.defaultSets)", value: self.$defaultSets, in: 1...20)
+
             HStack {
                 Text("重量 (kg)")
                 Spacer()
-                TextField("重量", value: $defaultWeight, format: .number)
+                TextField("重量", value: self.$defaultWeight, format: .number)
                     .keyboardType(.decimalPad)
                     .multilineTextAlignment(.trailing)
                     .frame(width: 80)
             }
-            
-            Stepper("レップ数: \(defaultReps)", value: $defaultReps, in: 1...100)
+
+            Stepper("レップ数: \(self.defaultReps)", value: self.$defaultReps, in: 1...100)
         }
         .navigationTitle("種目編集")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
                 Button("保存") {
-                    viewModel.updateExercise(
-                        exercise,
-                        name: name,
-                        defaultSets: defaultSets,
-                        defaultWeight: defaultWeight,
-                        defaultReps: defaultReps,
-                        modelContext: modelContext
+                    self.viewModel.updateExercise(
+                        self.exercise,
+                        name: self.name,
+                        defaultSets: self.defaultSets,
+                        defaultWeight: self.defaultWeight,
+                        defaultReps: self.defaultReps,
+                        modelContext: self.modelContext
                     )
-                    dismiss()
+                    self.dismiss()
                 }
             }
         }
         .onAppear {
-            name = exercise.name
-            defaultSets = exercise.defaultSets
-            defaultWeight = exercise.defaultWeight
-            defaultReps = exercise.defaultReps
+            self.name = self.exercise.name
+            self.defaultSets = self.exercise.defaultSets
+            self.defaultWeight = self.exercise.defaultWeight
+            self.defaultReps = self.exercise.defaultReps
         }
     }
 }

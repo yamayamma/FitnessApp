@@ -6,24 +6,24 @@
 //  T018: Menu selection with empty state UI and free workout option (FR-025)
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 /// メニュー選択画面（Apple Watch）
 struct MenuSelectionView: View {
     @Environment(WatchSessionManager.self) private var sessionManager
     @Environment(\.modelContext) private var modelContext
-    
+
     @State private var workoutViewModel: WorkoutViewModel?
     @State private var isWorkoutActive = false
     @State private var selectedMenu: MenuTransfer?
     @State private var showCrashRecovery = false
-    
+
     var body: some View {
         NavigationStack {
             List {
                 // メニュー一覧
-                if sessionManager.cachedMenus.isEmpty {
+                if self.sessionManager.cachedMenus.isEmpty {
                     // 空状態UI (FR-025)
                     Section {
                         VStack(spacing: 8) {
@@ -42,10 +42,10 @@ struct MenuSelectionView: View {
                     }
                 } else {
                     Section("メニュー") {
-                        ForEach(sessionManager.cachedMenus, id: \.menuId) { menu in
+                        ForEach(self.sessionManager.cachedMenus, id: \.menuId) { menu in
                             Button {
-                                selectedMenu = menu
-                                startWorkout(with: menu)
+                                self.selectedMenu = menu
+                                self.startWorkout(with: menu)
                             } label: {
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text(menu.name)
@@ -58,23 +58,23 @@ struct MenuSelectionView: View {
                         }
                     }
                 }
-                
+
                 // フリーワークアウト開始オプション
                 Section {
                     Button {
-                        startWorkout(with: nil)
+                        self.startWorkout(with: nil)
                     } label: {
                         Label("フリーワークアウト", systemImage: "figure.strengthtraining.traditional")
                     }
                 }
             }
             .navigationTitle("ワークアウト")
-            .navigationDestination(isPresented: $isWorkoutActive) {
+            .navigationDestination(isPresented: self.$isWorkoutActive) {
                 if let viewModel = workoutViewModel {
                     ActiveWorkoutView(viewModel: viewModel)
                 }
             }
-            .alert("未完了のワークアウト", isPresented: $showCrashRecovery) {
+            .alert("未完了のワークアウト", isPresented: self.$showCrashRecovery) {
                 Button("続行") {
                     // クラッシュリカバリ: セッション復元
                 }
@@ -86,28 +86,28 @@ struct MenuSelectionView: View {
             }
             .task {
                 // クラッシュリカバリチェック (T022)
-                await checkForActiveSession()
+                await self.checkForActiveSession()
             }
         }
     }
-    
+
     // MARK: - Actions
-    
+
     private func startWorkout(with menu: MenuTransfer?) {
         let viewModel = WorkoutViewModel()
         self.workoutViewModel = viewModel
-        
+
         Task {
             // HealthKit認可
             await viewModel.healthKitManager.requestAuthorization()
-            
+
             // ワークアウト開始
-            await viewModel.startWorkout(menu: menu, modelContext: modelContext)
-            
-            isWorkoutActive = true
+            await viewModel.startWorkout(menu: menu, modelContext: self.modelContext)
+
+            self.isWorkoutActive = true
         }
     }
-    
+
     /// クラッシュリカバリ: 未完了セッションのチェック (T022)
     private func checkForActiveSession() async {
         let descriptor = FetchDescriptor<WorkoutSession>(
@@ -115,10 +115,11 @@ struct MenuSelectionView: View {
                 session.statusRawValue == "active" || session.statusRawValue == "paused"
             }
         )
-        
+
         if let activeSessions = try? modelContext.fetch(descriptor),
-           !activeSessions.isEmpty {
-            showCrashRecovery = true
+           !activeSessions.isEmpty
+        {
+            self.showCrashRecovery = true
         }
     }
 }

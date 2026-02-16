@@ -50,3 +50,14 @@ fastlane/screenshots
 # ===============================
 
 docker-compose.override.yml
+
+# ===============================
+# Development Tools
+# ===============================
+
+# SwiftLint
+.swiftlint-cache/
+
+# Temporary files
+tmp.md
+/tmp/

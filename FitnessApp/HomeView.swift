@@ -10,7 +10,7 @@ struct HomeView: View {
                 } label: {
                     Label("ワークアウト履歴", systemImage: "clock.arrow.circlepath")
                 }
-                
+
                 // US3: メニュー管理
                 NavigationLink {
                     MenuManagementView()

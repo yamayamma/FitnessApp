@@ -6,14 +6,14 @@
 //  T029: History list with today's workouts at top, past workouts below (FR-008, FR-010)
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 /// ワークアウト履歴一覧画面（iPhone）
 struct HistoryListView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var viewModel = HistoryViewModel()
-    
+
     var body: some View {
         List {
             // 統計サマリー
@@ -21,23 +21,23 @@ struct HistoryListView: View {
                 HStack {
                     StatCard(
                         title: "ワークアウト数",
-                        value: "\(viewModel.totalWorkouts)",
+                        value: "\(self.viewModel.totalWorkouts)",
                         icon: "figure.strengthtraining.traditional"
                     )
                     StatCard(
                         title: "合計時間",
-                        value: viewModel.totalDurationString,
+                        value: self.viewModel.totalDurationString,
                         icon: "timer"
                     )
                 }
                 .listRowInsets(EdgeInsets())
                 .listRowBackground(Color.clear)
             }
-            
+
             // 当日のワークアウト
-            if !viewModel.todaysSessions.isEmpty {
+            if !self.viewModel.todaysSessions.isEmpty {
                 Section("今日") {
-                    ForEach(viewModel.todaysSessions, id: \.id) { session in
+                    ForEach(self.viewModel.todaysSessions, id: \.id) { session in
                         NavigationLink {
                             WorkoutDetailView(session: session)
                         } label: {
@@ -46,11 +46,11 @@ struct HistoryListView: View {
                     }
                 }
             }
-            
+
             // 過去のワークアウト
-            if !viewModel.pastSessions.isEmpty {
+            if !self.viewModel.pastSessions.isEmpty {
                 Section("過去の記録") {
-                    ForEach(viewModel.pastSessions, id: \.id) { session in
+                    ForEach(self.viewModel.pastSessions, id: \.id) { session in
                         NavigationLink {
                             WorkoutDetailView(session: session)
                         } label: {
@@ -59,9 +59,9 @@ struct HistoryListView: View {
                     }
                 }
             }
-            
+
             // データ無し
-            if viewModel.workoutSessions.isEmpty {
+            if self.viewModel.workoutSessions.isEmpty {
                 Section {
                     VStack(spacing: 12) {
                         Image(systemName: "figure.strengthtraining.traditional")
@@ -82,10 +82,10 @@ struct HistoryListView: View {
         }
         .navigationTitle("ワークアウト履歴")
         .onAppear {
-            viewModel.loadSessions(modelContext: modelContext)
+            self.viewModel.loadSessions(modelContext: self.modelContext)
         }
         .refreshable {
-            viewModel.loadSessions(modelContext: modelContext)
+            self.viewModel.loadSessions(modelContext: self.modelContext)
         }
     }
 }
@@ -95,33 +95,33 @@ struct HistoryListView: View {
 /// ワークアウトセッション行
 struct WorkoutSessionRow: View {
     let session: WorkoutSession
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             // メニュー名
-            Text(session.menuName ?? "フリーワークアウト")
+            Text(self.session.menuName ?? "フリーワークアウト")
                 .font(.headline)
-            
+
             HStack(spacing: 12) {
                 // 日付
                 Label(
-                    HistoryViewModel.formatDate(session.startDate),
+                    HistoryViewModel.formatDate(self.session.startDate),
                     systemImage: "calendar"
                 )
                 .font(.caption)
                 .foregroundStyle(.secondary)
-                
+
                 // 時間
                 Label(
-                    HistoryViewModel.formatDuration(session.totalDuration),
+                    HistoryViewModel.formatDuration(self.session.totalDuration),
                     systemImage: "timer"
                 )
                 .font(.caption)
                 .foregroundStyle(.secondary)
             }
-            
+
             // 種目数
-            Text("\(session.exerciseResults.count)種目")
+            Text("\(self.session.exerciseResults.count)種目")
                 .font(.caption2)
                 .foregroundStyle(.tertiary)
         }
@@ -134,16 +134,16 @@ struct StatCard: View {
     let title: String
     let value: String
     let icon: String
-    
+
     var body: some View {
         VStack(spacing: 4) {
-            Image(systemName: icon)
+            Image(systemName: self.icon)
                 .font(.title2)
                 .foregroundStyle(.blue)
-            Text(value)
+            Text(self.value)
                 .font(.title3)
                 .fontWeight(.bold)
-            Text(title)
+            Text(self.title)
                 .font(.caption2)
                 .foregroundStyle(.secondary)
         }

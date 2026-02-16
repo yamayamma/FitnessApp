@@ -1,0 +1,50 @@
+# SwiftFormat Configuration for FitnessApp
+# https://github.com/nicklockwood/SwiftFormat
+
+--swiftversion 5.9
+
+# File options
+--exclude Pods,.build,DerivedData,.swiftpm
+
+# Format options
+--indent 4
+--indentcase false
+--trimwhitespace always
+--commas always
+--semicolons inline
+--linebreaks lf
+--ifdef no-indent
+
+# Wrapping
+--wraparguments before-first
+--wrapparameters before-first
+--wrapcollections before-first
+--closingparen balanced
+--wrapternary before-operators
+--maxwidth 120
+
+# Spacing
+--operatorfunc spaced
+--nospaceoperators ..., ..<
+--ranges spaced
+--emptybraces no-space
+--typeattributes prev-line
+--varattributes prev-line
+
+# Organization
+--importgrouping testable-bottom
+--patternlet inline
+--stripunusedargs closure-only
+--self insert
+--selfrequired
+--extensionacl on-declarations
+--redundanttype inferred
+
+# Rules (enable/disable)
+--enable isEmpty
+--enable sortedImports
+--enable consecutiveSpaces
+--enable redundantReturn
+--enable trailingCommas
+
+--disable blankLinesBetweenScopes

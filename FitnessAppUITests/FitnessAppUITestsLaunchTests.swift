@@ -8,7 +8,6 @@
 import XCTest
 
 final class FitnessAppUITestsLaunchTests: XCTestCase {
-
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true
     }
@@ -18,7 +17,7 @@ final class FitnessAppUITestsLaunchTests: XCTestCase {
     }
 
     @MainActor
-    func testLaunch() throws {
+    func testLaunch() {
         let app = XCUIApplication()
         app.launch()
 
